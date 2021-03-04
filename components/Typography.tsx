@@ -31,6 +31,7 @@ const Typography: React.FC<TypographyProps> = ({
   const style = css({
     fontFamily: "'Source Sans Pro', sans-serif",
     color: color,
+    textAlign: "start",
     ...styleCase[variant],
   });
 

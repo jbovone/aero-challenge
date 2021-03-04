@@ -1,11 +1,19 @@
 import React from "react";
-import { css } from "@emotion/css";
+import { css, CSSObject, cx } from "@emotion/css";
+import { SerializedStyles } from "@emotion/react";
 
-const style = css({
-  minHeight: "100vh",
-});
+interface viewProps {
+  cssProps?: CSSObject;
+}
 
-const View: React.FC<{}> = ({ children }) => {
+const View: React.FC<viewProps> = ({ children, cssProps }) => {
+  const style = css({
+    minHeight: "100vh",
+    width: "100%",
+    ...cssProps,
+  });
+  console.log(style);
+
   return <main className={style}>{children}</main>;
 };
 export default View;

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Typography from "./Typography";
 import React from "react";
 import { colors } from "../constants/colors";
-import { mediaQuery } from "../utils/media";
+import { media } from "../utils/media";
 
 const style: CSSInterpolation = css({
   width: "100%",
@@ -17,7 +17,7 @@ const style: CSSInterpolation = css({
     bottom: "4vw",
     left: "4vw",
   },
-  ...mediaQuery(740, {
+  ...media(740, {
     h1: {
       fontSize: "4rem" /*use case specific in principle*/,
     },
