@@ -7,10 +7,10 @@ import Bag from "./svg/Bag";
 import { flex } from "../utils/flex";
 import Coin from "./svg/Coin";
 import Curtain from "./Curtain";
+import Separator from "./Separator";
 
 const Card: React.FC<Card> = ({ setToChart, ...props }) => {
   const [selected, setSelected] = useState(false);
-  const padd = 10;
 
   const style: CSSInterpolation = css({
     margin: 15,
@@ -37,12 +37,6 @@ const Card: React.FC<Card> = ({ setToChart, ...props }) => {
     img: {
       width: "100%",
     },
-    hr: {
-      width: "80%",
-      border: "solid 0.1px" + colors.boxShadow,
-      marginBottom: 20,
-    },
-
     ...media(1130, {
       width: "28%",
     }),
@@ -72,7 +66,7 @@ const Card: React.FC<Card> = ({ setToChart, ...props }) => {
         </div>
       </header>
       <img src={props.img.url} />
-      <hr />
+      <Separator />
       <Typography color={colors.fontSecondary}>{props.category}</Typography>
       <Typography>{props.name}</Typography>
       <Curtain

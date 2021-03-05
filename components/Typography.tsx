@@ -24,7 +24,7 @@ const Typography: React.FC<TypographyProps> = ({
       fontSize: "1.8rem",
     },
     small: {
-      fontSize: "1.6rem",
+      fontSize: "1.2rem",
     },
   };
 

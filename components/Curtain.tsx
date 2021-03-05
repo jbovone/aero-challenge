@@ -20,7 +20,7 @@ const Curtain: React.FC<CurtainProps> = ({ show, cost, id, setToChart }) => {
     width: "100%",
     transition: ".3s",
     height: show ? "100%" : 0,
-    background: colors.primaryAlhpa,
+    background: colors.primaryAlpha,
     ...flex("space-evenly", "center", "column"),
     span: {
       ...flex(),

@@ -1,12 +1,14 @@
 import React from "react";
 
-interface BagProps {}
+interface BagProps {
+  size?: number;
+}
 
-const Bag: React.FC<BagProps> = ({}) => {
+const Bag: React.FC<BagProps> = ({ size }) => {
   return (
     <svg
-      width="33px"
-      height="33px"
+      width={size ? `${size}px` : "34px"}
+      height={size ? `${size}px` : "34px"}
       viewBox="0 0 50 50"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"

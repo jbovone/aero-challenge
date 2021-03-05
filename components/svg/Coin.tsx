@@ -1,12 +1,14 @@
 import React from "react";
 
-interface CoinProps {}
+interface CoinProps {
+  size?: number;
+}
 
-const Coin: React.FC<CoinProps> = ({}) => {
+const Coin: React.FC<CoinProps> = ({ size }) => {
   return (
     <svg
-      width="34px"
-      height="34px"
+      width={size ? `${size}px` : "34px"}
+      height={size ? `${size}px` : "34px"}
       viewBox="0 0 34 34"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"

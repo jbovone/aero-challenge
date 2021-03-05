@@ -1,6 +1,5 @@
 import React from "react";
-import { css, CSSObject, cx } from "@emotion/css";
-import { SerializedStyles } from "@emotion/react";
+import { css, CSSObject } from "@emotion/css";
 
 interface viewProps {
   cssProps?: CSSObject;
@@ -12,8 +11,6 @@ const View: React.FC<viewProps> = ({ children, cssProps }) => {
     width: "100%",
     ...cssProps,
   });
-  console.log(style);
-
   return <main className={style}>{children}</main>;
 };
 export default View;
