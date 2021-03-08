@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import View from "../components/View";
+import View from "../components/normalizers/View";
 
 export default function Home() {
   const router = useRouter();

@@ -1,45 +1,49 @@
-import axios from "axios";
-import Box from "../components/Box";
 import Card from "../components/Card";
-import View from "../components/View";
+import View from "../components/normalizers/View";
 import { flex, wrap } from "../utils/flex";
 import mock from "../mockData.json";
+import Typography from "../components/Typography";
+import { apiService, toMapProduct } from "../service/service";
+import { CSSObject } from "@emotion/css";
+import { SetStateAction } from "react";
 
 interface redeem {
-  products: Card[];
+  products: Product[];
+  setToCart: React.Dispatch<SetStateAction<Product[]>>;
 }
 
 export async function getStaticProps() {
   if (process.env.NODE_ENV === "development") {
     return {
       props: {
-        products: mock,
+        products: toMapProduct(mock),
       },
     };
   }
-  const products = await axios
-    .get("/allRedeems", {
-      headers: {},
-    })
-    .then((res) => res.data)
-    .catch((err) => err);
-
+  console.log("PRODUCTION-REQ");
+  const products = toMapProduct(await apiService("/products", "GET"));
   return {
     props: {
       products,
     },
   };
 }
-const style: any = {
-  ...flex(),
-  ...wrap(),
+const style: CSSObject = {
+  "&>section": {
+    width: "100%",
+    ...flex(),
+    ...wrap(),
+  },
 };
-const Reedem: React.FC<redeem> = ({ products }) => {
+const Reedem: React.FC<redeem> = ({ products, setToCart }) => {
   return (
     <View cssProps={style}>
-      {products.map((product) => (
-        <Card {...product} key={product.id} />
-      ))}
+      <Typography> {products.length}</Typography>
+      <section>
+        {products.map((product) => (
+          <Card product={product} setToCart={setToCart} key={product.id} />
+        ))}
+      </section>
     </View>
   );
 };

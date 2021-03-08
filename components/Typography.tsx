@@ -5,11 +5,13 @@ import { colors } from "../constants/colors";
 interface TypographyProps {
   variant?: "h1" | "h2" | "p" | "small";
   color?: string;
+  bold?: boolean;
 }
 
 const Typography: React.FC<TypographyProps> = ({
   variant = "p",
   color = colors.fontPrimary,
+  bold,
   children,
 }) => {
   const styleCase = {
@@ -19,12 +21,15 @@ const Typography: React.FC<TypographyProps> = ({
     },
     h2: {
       fontSize: "2.4rem",
+      fontWeight: bold ? 900 : 400,
     },
     p: {
       fontSize: "1.8rem",
+      fontWeight: bold ? 900 : 400,
     },
     small: {
       fontSize: "1.2rem",
+      fontWeight: bold ? 600 : 400,
     },
   };
 

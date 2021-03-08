@@ -20,16 +20,16 @@ const Aerolab: React.FC<AerolabProps> = ({}) => {
           y2="100%"
           id="linearGradient-1"
         >
-          <stop stop-color="#FF8800" offset="0%"></stop>
-          <stop stop-color="#FF6600" offset="100%"></stop>
+          <stop stopColor="#FF8800" offset="0%"></stop>
+          <stop stopColor="#FF6600" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Page-1"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Catalog"

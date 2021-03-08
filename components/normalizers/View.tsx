@@ -1,5 +1,6 @@
 import React from "react";
 import { css, CSSObject } from "@emotion/css";
+import { flex } from "../../utils/flex";
 
 interface viewProps {
   cssProps?: CSSObject;
@@ -7,7 +8,7 @@ interface viewProps {
 
 const View: React.FC<viewProps> = ({ children, cssProps }) => {
   const style = css({
-    minHeight: "100vh",
+    minHeight: "55vh",
     width: "100%",
     ...cssProps,
   });

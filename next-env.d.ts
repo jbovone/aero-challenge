@@ -1,7 +1,7 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
 
-interface Card {
+interface Product {
   img: {
     url: string;
     hdUrl: string;
@@ -10,5 +10,9 @@ interface Card {
   name: string;
   cost: number;
   category: string;
-  setToChart: Function;
+}
+
+interface cardProps {
+  product: Product;
+  setToCart: React.Dispatch<React.SetStateAction<Product[]>>;
 }
