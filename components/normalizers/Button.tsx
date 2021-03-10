@@ -1,10 +1,11 @@
 import { css } from "@emotion/css";
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, FocusEvent } from "react";
 
 interface ButtonProps {
-  onClick?: any;
-  onBlur?: any;
-  onFocus?: any;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  onBlur?: (event: FocusEvent<HTMLButtonElement>) => void;
+  onFocus?: (event: FocusEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 }
 
 const style = css({
@@ -17,6 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   onBlur,
   onFocus,
+  disabled,
   children,
 }) => {
   return (
@@ -25,6 +27,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       onBlur={onBlur}
       onFocus={onFocus}
+      disabled={disabled}
     >
       {children}
     </button>

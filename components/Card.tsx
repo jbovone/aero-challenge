@@ -24,6 +24,7 @@ const Card: React.FC<cardProps> = ({ ...props }) => {
     transition: ".3s",
     transform: selected ? "scale(1.2)" : "none",
     zIndex: selected ? 100 : 99,
+    order: props.order,
     "&>*": {
       width: "100%",
     },

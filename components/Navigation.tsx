@@ -63,7 +63,7 @@ const Navigation: React.FC<NavigationProps> = ({ coins, bagLength }) => {
       </a>
       <aside>
         <AeroNavLink title="Home" href="/Home" />
-        <AeroNavLink title="Choose Prices" href="/redeem" />
+        <AeroNavLink title="Choose Prizes" href="/redeem" />
         <AeroNavLink title="Contact" href="/Contact" />
         <div className="coins">
           <Coin size={45} />

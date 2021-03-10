@@ -4,12 +4,13 @@ import { css } from "@emotion/css";
 
 const style = css({
   width: "80%",
-  border: "solid 0.1px" + colors.boxShadow,
+  height: ".5px",
   margin: "0 auto",
-  marginBottom: 25,
+  marginBottom: ".9em",
+  background: colors.fontSecondary,
 });
 
 const Separator: React.FC<{}> = ({}) => {
-  return <hr className={style} />;
+  return <div className={style} />;
 };
 export default Separator;

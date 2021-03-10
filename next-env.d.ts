@@ -14,5 +14,8 @@ interface Product {
 
 interface cardProps {
   product: Product;
+  order?: number;
   setToCart: React.Dispatch<React.SetStateAction<Product[]>>;
 }
+
+type orderBy = "Most Recent" | "Lowest Price" | "Highest Price";
