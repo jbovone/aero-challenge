@@ -1,20 +1,19 @@
-import { SetStateAction, useState, useEffect } from "react";
-import { GetStaticProps } from "next";
-import Card from "../components/Card";
-import View from "../components/normalizers/View";
-import { flex, wrap } from "../utils/flex";
-import mock from "../mockData.json";
-import Typography from "../components/Typography";
-import { apiService, toMapProduct } from "../service/service";
 import { CSSObject } from "@emotion/css";
 import styled from "@emotion/styled";
+import { GetStaticProps } from "next";
+import { SetStateAction, useEffect, useState } from "react";
+import Card from "../components/Card";
+import View from "../components/normalizers/View";
+import { NextBtn, Paginator } from "../components/Paginator";
 import PillButton from "../components/PillButton";
-import { usePagination } from "../hooks/usePagination";
-import PaginationIcon from "../components/svg/PaginationIcon";
-import Button from "../components/normalizers/Button";
 import Separator from "../components/Separator";
+import Typography from "../components/Typography";
 import { colors } from "../constants/colors";
-import { Input, Select } from "../components/FancyInputs";
+import { usePagination } from "../hooks/usePagination";
+import mock from "../mockData.json";
+import { apiService, toMapProduct } from "../service/service";
+import { flex, wrap } from "../utils/flex";
+import { media } from "../utils/media";
 
 interface redeem {
   products: Product[];
@@ -41,35 +40,87 @@ const orderTypes: orderBy[] = ["Most Recent", "Lowest Price", "Highest Price"];
 
 const ControlsContainer = styled.section({
   ...flex("flex-start"),
-  padding: "35px 0",
-  paddingTop: "60px",
+  paddingTop: "80px",
   "&>*": {
-    margin: "0 .7em",
+    marginBottom: 40,
   },
-  ".sort": {
-    ...flex("flex-start"),
-    flex: 1,
-    "&>*": {
-      margin: "0 .7em",
-    },
-  },
+  ...media(1240, {
+    ...wrap("space-evenly", "space-evenly"),
+  }),
 });
-const ProductsViewer = styled.section({
+
+const NamedButtonPannel = styled.div({
   ...flex("flex-start"),
-  ...wrap(),
-  padding: 20,
+  flex: 1,
+  ...media(1240, {
+    flex: "unset",
+    width: "100%",
+    order: -1,
+    ">*": {
+      width: "50%",
+    },
+  }),
+  ...media(890, {
+    flexDirection: "column",
+    h2: {
+      alignSelf: "flex-start",
+    },
+  }),
+  ...media(680, {
+    ">*": {
+      width: "80%",
+    },
+  }),
 });
-const VSeparator = styled.div({
-  height: "50px",
-  width: "0.5px",
-  margin: 2,
-  background: colors.fontSecondary,
+
+const ProductsViewer = styled.section({
+  display: "grid",
+  gap: "2em",
+  gridTemplateColumns: "repeat(4, auto)",
+  ...media(1240, {
+    gridTemplateColumns: "repeat(3, auto)",
+  }),
+  ...media(810, {
+    gridTemplateColumns: "repeat(2, auto)",
+  }),
+  ...media(520, {
+    gridTemplateColumns: "repeat(1, auto)",
+  }),
 });
+
+const Footer = styled.section({
+  ...flex("space-between", "center"),
+  margin: "50px auto !important",
+  "&>*": {
+    ...flex(),
+  },
+  ...media(1240, {
+    ...wrap(),
+    "div:first-child": {
+      order: 1,
+    },
+    "div:nth-of-type(1)": {
+      marginTop: "120px",
+    },
+  }),
+  ...media(740, {
+    marginBottom: "20px !important",
+    "div:nth-of-type(2), div:nth-of-type(3)": {
+      width: "100%",
+    },
+  }),
+});
+
 const ViewStyles: CSSObject = {
   "&>section": {
     width: "88%",
     margin: "auto",
   },
+  ...media(1240, {
+    "&>section": {
+      width: "95%",
+    },
+  }),
 };
 
 const Reedem: React.FC<redeem> = ({ products, setToCart }) => {
@@ -78,43 +129,28 @@ const Reedem: React.FC<redeem> = ({ products, setToCart }) => {
   const [page, setPage] = useState<number>(1);
   const pagination = usePagination(itemsPerPage, products);
   const ProductCounter: React.FC = () => (
-    <>
+    <div
+      style={{
+        marginRight: "1em",
+        borderRight: `solid 1px ${colors.fontSecondary}`,
+      }}
+    >
       <Typography variant="h2">
         {pagination[page - 1].length * page} of {products.length} products
       </Typography>
-      <VSeparator />
-    </>
-  );
-  const NextBtn = ({ right }: { right: boolean }) => (
-    <Button
-      disabled={right ? page === pagination.length : page === 1}
-      onClick={() => (right ? setPage((i) => i + 1) : setPage((i) => i - 1))}
-    >
-      <PaginationIcon left={!right} />
-    </Button>
+    </div>
   );
 
   useEffect(() => {
     setPage(() => 1);
   }, [itemsPerPage]);
 
-  function handlePageChange(value: string | "") {
-    if (!value) return;
-    if (isPageValid(value)) {
-      setPage(() => parseInt(value));
-    }
-  }
-  function isPageValid(value: string) {
-    return Boolean(
-      parseInt(value) >= 1 && parseInt(value) <= pagination.length
-    );
-  }
-
   return (
     <View cssProps={ViewStyles}>
       <ControlsContainer>
         <ProductCounter />
-        <div className="sort">
+
+        <NamedButtonPannel>
           <Typography color={colors.fontSecondary} variant="h2">
             Sort by :
           </Typography>
@@ -129,10 +165,16 @@ const Reedem: React.FC<redeem> = ({ products, setToCart }) => {
               active={type === orderBy}
             />
           ))}
-        </div>
-        <NextBtn right={true} />
+        </NamedButtonPannel>
+
+        <NextBtn
+          setPage={setPage}
+          right={true}
+          isLastPage={page === pagination.length}
+          isFirstPage={page === 1}
+        />
       </ControlsContainer>
-      <Separator />
+      <Separator mb={40} />
       <ProductsViewer>
         {pagination[page - 1].map((product, i) => (
           <Card
@@ -149,28 +191,15 @@ const Reedem: React.FC<redeem> = ({ products, setToCart }) => {
           />
         ))}
       </ProductsViewer>
-      <ControlsContainer>
+      <Footer>
         <ProductCounter />
-        <div className="sort">
-          <NextBtn right={false} />
-          <Typography>Go to page</Typography>
-          <Input
-            onChange={handlePageChange}
-            initialState={String(page)}
-            imperativeSetValue={String(page)}
-          />
-          <Typography>of {pagination.length}</Typography>
-          <NextBtn right={true} />
-        </div>
-        <Typography>Showing</Typography>
-        <Select
-          values={[4, 8, 12, 16]}
-          setValue={setItemsPerPage}
-          value={String(itemsPerPage)}
+        <Paginator
+          curentPage={page}
+          {...{ itemsPerPage, setItemsPerPage, setPage }}
+          totalPages={pagination.length}
         />
-        <Typography>Products per Page</Typography>
-      </ControlsContainer>
-      <Separator />
+      </Footer>
+      <Separator mb={100} />
     </View>
   );
 };

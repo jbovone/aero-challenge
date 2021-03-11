@@ -1,5 +1,5 @@
-import { css, cx, CSSObject, CSSInterpolation } from "@emotion/css";
-import React, { SetStateAction, Dispatch, useState, useEffect } from "react";
+import { css, CSSInterpolation, cx } from "@emotion/css";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { colors } from "../constants/colors";
 
 interface InputProps {
@@ -32,7 +32,7 @@ const inputStyle: CSSInterpolation = css({
   textAlign: "center",
 });
 
-const Input: React.FC<InputProps> = ({
+export const Input: React.FC<InputProps> = ({
   onChange,
   initialState,
   imperativeSetValue,
@@ -56,7 +56,7 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-const Select: React.FC<SelectProps> = ({ setValue, values, value }) => {
+export const Select: React.FC<SelectProps> = ({ setValue, values, value }) => {
   return (
     <select
       className={cx(fancy, selectStyle)}
@@ -69,5 +69,3 @@ const Select: React.FC<SelectProps> = ({ setValue, values, value }) => {
     </select>
   );
 };
-
-export { Input, Select };
