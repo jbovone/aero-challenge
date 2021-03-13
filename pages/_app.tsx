@@ -3,33 +3,40 @@ import Header from "../components/Header";
 import "../styles/globals.css";
 import Navigation from "../components/Navigation";
 import { useState, useEffect } from "react";
+import Dialog from "../components/Dialog";
+import { dialogDispatch } from "../constants/dialogs";
 
 const MyApp: AppComponent = ({ Component, pageProps }) => {
+  const [user, setUser] = useState<user>();
   const [cart, setToCart] = useState<Product[]>([]);
-  const [user, setUser] = useState({
-    points: 0,
-    name: "",
+  const [dialog, setDialog] = useState<dialogProps>({
+    id: null,
+    title: null,
   });
 
   useEffect(() => {
     fetch("api/auth/me").then((res) =>
-      res.json().then((user) => setUser(() => ({ ...user })))
+      res.json().then((user: user) => {
+        setUser(() => ({ ...user }));
+        setDialog(() => ({
+          id: dialogDispatch.welcomeSuccess,
+          title: user.name,
+        }));
+      })
     );
   }, []);
 
-  useEffect(() => {
-    console.log(cart, "chart TOP_APP");
-  }, [cart, setToCart]);
-
   return (
     <>
-      <Navigation coins={user.points} bagLength={cart.length} />
+      <Navigation coins={user ? user.points : 0} bagLength={cart.length} />
       <Header />
+      <Dialog dialogId={dialog.id} title={dialog.title} />
       <Component
         {...pageProps}
         setToCart={setToCart}
+        setDialog={setDialog}
         cart={cart}
-        coins={user.points}
+        coins={user ? user.points : 0}
       />
     </>
   );

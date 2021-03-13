@@ -7,7 +7,6 @@ export function usePagination<T>(
   itemsCollection: T[]
 ): Array<T[]> {
   const pages = Math.ceil(itemsCollection.length / itemsPerPage);
-  console.log(pages, "PAGES");
   if (itemsCollection.length <= 0 || itemsPerPage <= 0) {
     throw new Error(NO_COLLECTION);
   }

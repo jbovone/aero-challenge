@@ -12,10 +12,24 @@ interface Product {
   category: string;
 }
 
+interface user {
+  points: 0;
+  name: string;
+}
+
 interface cardProps {
   product: Product;
   order?: number;
-  setToCart: React.Dispatch<React.SetStateAction<Product[]>>;
+  setRedeem: React.Dispatch<
+    React.SetStateAction<Product[]>,
+    React.SetStateAction<dialogProps>
+  >;
+}
+
+type dialogDispatchEnum = "ADD_TO_BAG" | "PURCHASE_SUCESS" | "WELLCOME_SUCCESS";
+interface dialogProps {
+  id: dialogDispatchEnum | null;
+  title: string | null;
 }
 
 type orderBy = "Most Recent" | "Lowest Price" | "Highest Price";

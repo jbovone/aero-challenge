@@ -1,6 +1,5 @@
 import { css, CSSInterpolation, CSSObject } from "@emotion/css";
 import React, { useState, useRef, useEffect, createRef } from "react";
-import { media } from "../utils/media";
 import Typography from "./Typography";
 import { colors } from "../constants/colors";
 import Bag from "./svg/Bag";
@@ -14,7 +13,7 @@ import { boxShadow } from "../constants/boxShadow";
 const Card: React.FC<cardProps> = ({ ...props }) => {
   const [selected, setSelected] = useState(false);
   const ref = createRef<HTMLButtonElement>();
-  const { product, setToCart } = props;
+  const { product, setRedeem } = props;
 
   const style: CSSInterpolation = css({
     width: "100%",
@@ -24,7 +23,7 @@ const Card: React.FC<cardProps> = ({ ...props }) => {
     button: {
       margin: "0",
     },
-    overflow: "hidden",
+
     boxShadow: boxShadow,
     position: "relative",
     transition: ".3s",
@@ -37,10 +36,8 @@ const Card: React.FC<cardProps> = ({ ...props }) => {
         ...flex(),
       },
     },
-    "img, hr": {
-      margin: "0 auto",
-    },
-    "img, header": {
+
+    img: {
       width: "95%",
     },
   });
@@ -49,12 +46,6 @@ const Card: React.FC<cardProps> = ({ ...props }) => {
       ref.current.focus();
     }
   }, [selected]);
-  console.log(
-    product.img.url.replace(
-      "https://coding-challenge-api.aerolab.co/",
-      "/images/products/"
-    )
-  );
   return (
     <article className={style}>
       <Button
@@ -68,7 +59,7 @@ const Card: React.FC<cardProps> = ({ ...props }) => {
             <Coin />
           </div>
         </header>
-        <img src={"/images/products/AcerAspire-x1.png"} />
+        <img src={"/images/products/Nintendo3DS-x1.png"} />
         <Separator />
         <Typography color={colors.fontSecondary}>{product.category}</Typography>
         <Typography>{product.name}</Typography>
@@ -77,7 +68,7 @@ const Card: React.FC<cardProps> = ({ ...props }) => {
         ref={ref}
         show={selected}
         product={product}
-        setToCart={setToCart}
+        setRedeem={setRedeem}
         setSelected={setSelected}
       />
     </article>

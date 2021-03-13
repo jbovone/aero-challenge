@@ -12,7 +12,7 @@ type curtainProps = {
 };
 
 const Curtain = React.forwardRef<HTMLButtonElement, curtainProps & cardProps>(
-  ({ show, product, setToCart, setSelected }, ref) => {
+  ({ show, product, setRedeem, setSelected }, ref) => {
     const style = css({
       position: "absolute",
       bottom: 0,
@@ -38,7 +38,7 @@ const Curtain = React.forwardRef<HTMLButtonElement, curtainProps & cardProps>(
             </span>
             <PillButton
               ref={ref}
-              onClick={() => setToCart((products) => [...products, product])}
+              onClick={() => setRedeem()}
               onBlur={() => setSelected(false)}
               title="Redeem now"
             />

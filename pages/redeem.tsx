@@ -9,6 +9,7 @@ import PillButton from "../components/PillButton";
 import Separator from "../components/Separator";
 import Typography from "../components/Typography";
 import { colors } from "../constants/colors";
+import { dialogDispatch } from "../constants/dialogs";
 import { usePagination } from "../hooks/usePagination";
 import mock from "../mockData.json";
 import { apiService, toMapProduct } from "../service/service";
@@ -18,6 +19,7 @@ import { media } from "../utils/media";
 interface redeem {
   products: Product[];
   setToCart: React.Dispatch<SetStateAction<Product[]>>;
+  setDialog: React.Dispatch<SetStateAction<dialogProps>>;
 }
 
 export const getStaticProps: GetStaticProps = async (props) => {
@@ -123,7 +125,7 @@ const ViewStyles: CSSObject = {
   }),
 };
 
-const Reedem: React.FC<redeem> = ({ products, setToCart }) => {
+const Reedem: React.FC<redeem> = ({ products, setToCart, setDialog }) => {
   const [orderBy, setOrderBy] = useState<orderBy>("Most Recent");
   const [itemsPerPage, setItemsPerPage] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
@@ -179,7 +181,13 @@ const Reedem: React.FC<redeem> = ({ products, setToCart }) => {
         {pagination[page - 1].map((product, i) => (
           <Card
             product={product}
-            setToCart={setToCart}
+            setRedeem={() => {
+              setToCart((products) => [...products, product]);
+              setDialog(() => ({
+                id: dialogDispatch.addToBag,
+                title: product.name,
+              }));
+            }}
             key={product.id}
             order={
               {
