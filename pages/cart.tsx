@@ -1,6 +1,6 @@
 import { CSSObject } from "@emotion/css";
 import styled from "@emotion/styled";
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import Media from "../components/Media";
 import View from "../components/normalizers/View";
 import PillButton from "../components/PillButton";
@@ -11,14 +11,19 @@ import { flex } from "../utils/flex";
 import { media } from "../utils/media";
 import Separator from "../components/Separator";
 import axios from "axios";
+import { dialogDispatch } from "../constants/dialogs";
+import { useRouter } from "next/router";
 
 interface cartProps {
   cart: Product[];
   coins: number;
+  setToCart: React.Dispatch<SetStateAction<Product[]>>;
+  setDialog: React.Dispatch<SetStateAction<DialogProps>>;
 }
 
 const style: CSSObject = {
-  ...flex(),
+  ...flex("center", "flex-start"),
+  minHeight: "80vh",
   flexWrap: "wrap",
   ...media(840, {
     "&>*": {
@@ -27,8 +32,21 @@ const style: CSSObject = {
   }),
 };
 
+const EmptyBag = styled.section((props: { boxShadow?: string }) => ({
+  flex: 1,
+  ...flex("space-evenly", "center", "column"),
+  "box-shadow": props.boxShadow,
+  margin: "10px 15px",
+  padding: "8em 1em",
+  transform: "translateY(100%)",
+  "h2, p": {
+    textAlign: "center",
+    marginBottom: "1em",
+  },
+}));
+
 const MediaViewer = styled.section((props: { boxShadow?: string }) => ({
-  minWidth: 260,
+  flex: 1,
   "box-shadow": props.boxShadow,
   margin: "10px 15px",
   padding: "1em",
@@ -68,12 +86,13 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
   },
 }));
 
-const Chart: React.FC<cartProps & cardProps> = ({ cart, coins, setToCart }) => {
+const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
   const total = cart.reduce((acc, { cost }) => acc + cost, 0);
-  const [redeem, setRedeeem] = useState({
+  const [redeem, setRedeem] = useState({
     loading: false,
     error: false,
   });
+  const router = useRouter();
   useEffect(() => {
     if (redeem.loading) {
       axios
@@ -81,62 +100,86 @@ const Chart: React.FC<cartProps & cardProps> = ({ cart, coins, setToCart }) => {
           data: cart.map((prize) => prize.id),
         })
         .then((res) => {
-          setRedeeem((state) => ({ ...state, loading: false, error: false }));
-          setToCart([]);
+          setRedeem((state) => ({ ...state, loading: false, error: false }));
+          setToCart(() => []);
         })
         .catch(() => {
-          setRedeeem((state) => ({ ...state, loading: false, error: true }));
+          setRedeem((state) => ({ ...state, loading: false, error: true }));
         });
     }
   }, [redeem.loading]);
+
+  useEffect(() => {
+    if (cart.length === 0) {
+      setDialog((state) => ({
+        dialogType: dialogDispatch.emptyBag,
+        id: state.id + 1,
+        cb: () => router.push("/redeem"),
+      }));
+    }
+  }, [cart, setDialog, setToCart]);
   return (
     <View cssProps={style}>
-      <MediaViewer boxShadow={boxShadow}>
-        <Typography variant="h2" bold>
-          Your Prizes:
-        </Typography>
-        {cart.map((product) => (
-          <Media product={product} setToCart={setToCart} key={product.id} />
-        ))}
-      </MediaViewer>
-
-      <TotalViewer boxShadow={boxShadow}>
-        <Typography bold variant="h2">
-          Summary:
-        </Typography>
-        <Separator />
-        <ul>
-          {cart.map((prize, i) => (
-            <li key={i}>
-              <Typography> {prize.name}: </Typography>
-              <Typography bold> {prize.cost}</Typography>
-            </li>
-          ))}
-          <Separator />
-          <li>
-            <Typography>Total:</Typography>
-            <Typography bold>{Boolean(cart.length) && total}</Typography>
-          </li>
-          <li>
-            <Typography>Coins after Claim:</Typography>
-            <Typography bold>
-              {Boolean(cart.length) && coins - total}
-            </Typography>
-          </li>
-        </ul>
-        <PillButton
-          title={"Redeem Prizes"}
-          onClick={() => {
-            setRedeeem((state) => ({ ...state, loading: true }));
-          }}
-          disabled={total <= 0}
-        />
-        {redeem.error && (
-          <Typography bold variant="small" color="red">
-            Service Unavailable at the Moment
+      {cart.length === 0 ? (
+        <EmptyBag boxShadow={boxShadow}>
+          <Typography variant="h2" bold>
+            Oh! ..seems like the cart is empty
           </Typography>
-        )}
-      </TotalViewer>
+          <Typography variant="small" bold>
+            Go back to shopping for some awesome Prizes!
+          </Typography>
+        </EmptyBag>
+      ) : (
+        <MediaViewer boxShadow={boxShadow}>
+          <Typography variant="h2" bold>
+            Your Prizes:
+          </Typography>
+          {cart.map((product) => (
+            <Media product={product} setToCart={setToCart} key={product.id} />
+          ))}
+        </MediaViewer>
+      )}
+
+      {cart.length > 0 && (
+        <TotalViewer boxShadow={boxShadow}>
+          <Typography bold variant="h2">
+            Summary:
+          </Typography>
+          <Separator />
+          <ul>
+            {cart.map((prize, i) => (
+              <li key={i}>
+                <Typography> {prize.name}: </Typography>
+                <Typography bold> {prize.cost}</Typography>
+              </li>
+            ))}
+            <Separator />
+            <li>
+              <Typography>Total:</Typography>
+              <Typography bold>{Boolean(cart.length) && total}</Typography>
+            </li>
+            <li>
+              <Typography>Coins after Claim:</Typography>
+              <Typography bold>
+                {Boolean(cart.length) && coins - total}
+              </Typography>
+            </li>
+          </ul>
+          <div />
+          <PillButton
+            title={"Redeem Prizes"}
+            onClick={() => {
+              setRedeem((state) => ({ ...state, loading: true }));
+            }}
+            disabled={total <= 0}
+          />
+          {redeem.error && (
+            <Typography bold variant="small" color="red">
+              Service Unavailable at the Moment
+            </Typography>
+          )}
+        </TotalViewer>
+      )}
     </View>
   );
 };

@@ -15,11 +15,16 @@ import mock from "../mockData.json";
 import { apiService, toMapProduct } from "../service/service";
 import { flex, wrap } from "../utils/flex";
 import { media } from "../utils/media";
+import { useSorted } from "../hooks/useSorted";
+import Head from "next/head";
+import { motion } from "framer-motion";
 
 interface redeem {
   products: Product[];
   setToCart: React.Dispatch<SetStateAction<Product[]>>;
-  setDialog: React.Dispatch<SetStateAction<dialogProps>>;
+  setDialog: React.Dispatch<SetStateAction<DialogProps>>;
+  cart: Product[];
+  redeemHistory: Product[];
 }
 
 export const getStaticProps: GetStaticProps = async (props) => {
@@ -38,8 +43,6 @@ export const getStaticProps: GetStaticProps = async (props) => {
   };
 };
 
-const orderTypes: orderBy[] = ["Most Recent", "Lowest Price", "Highest Price"];
-
 const ControlsContainer = styled.section({
   ...flex("flex-start"),
   paddingTop: "80px",
@@ -54,6 +57,7 @@ const ControlsContainer = styled.section({
 const NamedButtonPannel = styled.div({
   ...flex("flex-start"),
   flex: 1,
+  minHeight: "20vh",
   ...media(1240, {
     flex: "unset",
     width: "100%",
@@ -78,6 +82,8 @@ const NamedButtonPannel = styled.div({
 const ProductsViewer = styled.section({
   display: "grid",
   gap: "2em",
+  position: "relative",
+  minHeight: "50vh",
   gridTemplateColumns: "repeat(4, auto)",
   ...media(1240, {
     gridTemplateColumns: "repeat(3, auto)",
@@ -92,17 +98,21 @@ const ProductsViewer = styled.section({
 
 const Footer = styled.section({
   ...flex("space-between", "center"),
-  margin: "50px auto !important",
+  margin: "30px auto !important",
+
   "&>*": {
     ...flex(),
   },
   ...media(1240, {
-    ...wrap(),
-    "div:first-child": {
-      order: 1,
-    },
+    minHeight: 260,
+    ...wrap("space-evenly", "space-evenly"),
     "div:nth-of-type(1)": {
-      marginTop: "120px",
+      order: 1,
+      marginTop: 40,
+      width: "100%",
+    },
+    "div:nth-of-type(2)": {
+      flex: 1,
     },
   }),
   ...media(740, {
@@ -125,11 +135,18 @@ const ViewStyles: CSSObject = {
   }),
 };
 
-const Reedem: React.FC<redeem> = ({ products, setToCart, setDialog }) => {
-  const [orderBy, setOrderBy] = useState<orderBy>("Most Recent");
+const Reedem: React.FC<redeem> = ({
+  products,
+  setToCart,
+  setDialog,
+  cart,
+  redeemHistory,
+}) => {
   const [itemsPerPage, setItemsPerPage] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
-  const pagination = usePagination(itemsPerPage, products);
+  const { activeOrder, assorted, setOrderBy, orderTypes } = useSorted(products);
+  const pagination = usePagination(itemsPerPage, assorted);
+
   const ProductCounter: React.FC = () => (
     <div
       style={{
@@ -149,6 +166,10 @@ const Reedem: React.FC<redeem> = ({ products, setToCart, setDialog }) => {
 
   return (
     <View cssProps={ViewStyles}>
+      <Head>
+        <title>Redeem your Points</title>
+        <link rel="icon" href="/images/icons/aerolab-logo.svg" />
+      </Head>
       <ControlsContainer>
         <ProductCounter />
 
@@ -164,7 +185,7 @@ const Reedem: React.FC<redeem> = ({ products, setToCart, setDialog }) => {
                 e.currentTarget.blur();
               }}
               title={type}
-              active={type === orderBy}
+              active={type === activeOrder}
             />
           ))}
         </NamedButtonPannel>
@@ -179,24 +200,29 @@ const Reedem: React.FC<redeem> = ({ products, setToCart, setDialog }) => {
       <Separator mb={40} />
       <ProductsViewer>
         {pagination[page - 1].map((product, i) => (
-          <Card
-            product={product}
-            setRedeem={() => {
-              setToCart((products) => [...products, product]);
-              setDialog(() => ({
-                id: dialogDispatch.addToBag,
-                title: product.name,
-              }));
-            }}
+          <motion.div
+            initial="fade"
+            layout
             key={product.id}
-            order={
-              {
-                "Most Recent": i,
-                "Lowest Price": product.cost,
-                "Highest Price": -product.cost,
-              }[orderBy]
-            }
-          />
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+          >
+            <Card
+              redeemed={redeemHistory.some((item) => item.id === product.id)}
+              bagged={cart.some((item) => item.id === product.id)}
+              product={product}
+              setRedeem={() => {
+                setToCart((products) => [...products, product]);
+                setDialog((state) => ({
+                  dialogType: dialogDispatch.addToBag,
+                  title: product.name,
+                  id: state.id + 1,
+                }));
+              }}
+            />
+          </motion.div>
         ))}
       </ProductsViewer>
       <Footer>
@@ -207,7 +233,7 @@ const Reedem: React.FC<redeem> = ({ products, setToCart, setDialog }) => {
           totalPages={pagination.length}
         />
       </Footer>
-      <Separator mb={100} />
+      <Separator mb={70} />
     </View>
   );
 };

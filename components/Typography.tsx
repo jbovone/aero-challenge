@@ -28,7 +28,7 @@ const Typography: React.FC<TypographyProps> = ({
       fontWeight: bold ? 900 : 400,
     },
     small: {
-      fontSize: "1.2rem",
+      fontSize: "1.3rem",
       fontWeight: bold ? 600 : 400,
     },
   };

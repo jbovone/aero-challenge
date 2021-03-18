@@ -3,6 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log(
+    "--------------------------COINS-API--------------------------------"
+  );
   if (process.env.NODE_ENV === "development") {
     return res.status(200).json({
       _id: "some_id",
@@ -13,7 +16,4 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       __v: 0,
     });
   }
-  console.log(
-    "--------------------------COINS-API--------------------------------"
-  );
 }

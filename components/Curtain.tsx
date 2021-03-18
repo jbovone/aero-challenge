@@ -11,41 +11,45 @@ type curtainProps = {
   setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Curtain = React.forwardRef<HTMLButtonElement, curtainProps & cardProps>(
-  ({ show, product, setRedeem, setSelected }, ref) => {
-    const style = css({
-      position: "absolute",
-      bottom: 0,
-      width: "100%",
-      transition: ".3s",
-      height: show ? "100%" : 0,
-      background: colors.primaryAlpha,
-      ...flex("space-evenly", "center", "column"),
-      span: {
-        ...flex(),
-      },
-    });
+const Curtain = React.forwardRef<
+  HTMLButtonElement,
+  curtainProps & Omit<cardProps, "redeemed" | "bagged">
+>(({ show, product, setRedeem, setSelected }, ref) => {
+  const style = css({
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    transition: ".3s",
+    height: show ? "100%" : 0,
+    background: colors.primaryAlpha,
+    ...flex("space-evenly", "center", "column"),
+    span: {
+      ...flex(),
+    },
+  });
 
-    return (
-      <div className={style}>
-        {show && (
-          <>
-            <span>
-              <Typography variant="h2" color={colors.fontInverse}>
-                {product.cost}
-              </Typography>
-              <Coin />
-            </span>
-            <PillButton
-              ref={ref}
-              onClick={() => setRedeem()}
-              onBlur={() => setSelected(false)}
-              title="Redeem now"
-            />
-          </>
-        )}
-      </div>
-    );
-  }
-);
+  return (
+    <div className={style}>
+      {show && (
+        <>
+          <span>
+            <Typography variant="h2" color={colors.fontInverse}>
+              {product.cost}
+            </Typography>
+            <Coin />
+          </span>
+          <PillButton
+            ref={ref}
+            onClick={(e) => {
+              setRedeem();
+              e.currentTarget.blur();
+            }}
+            onBlur={() => setSelected(false)}
+            title="Redeem now"
+          />
+        </>
+      )}
+    </div>
+  );
+});
 export default Curtain;

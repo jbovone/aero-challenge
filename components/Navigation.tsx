@@ -24,6 +24,7 @@ const style = css({
     ...flex(),
     "&>*": {
       margin: 8,
+      whiteSpace: "nowrap",
     },
     position: "relative",
   },
@@ -38,6 +39,9 @@ const style = css({
 });
 
 const pulsate = keyframes`
+  0% {
+    transform: scale(1)
+  }
   50% {
     transform: scale(1.09)
   }
@@ -63,8 +67,7 @@ const Navigation: React.FC<NavigationProps> = ({ coins, bagLength }) => {
       </a>
       <aside>
         <AeroNavLink title="Home" href="/Home" />
-        <AeroNavLink title="Choose Prizes" href="/redeem" />
-        <AeroNavLink title="Contact" href="/Contact" />
+        <AeroNavLink title="Prizes" href="/redeem" />
         <div className="coins">
           <Coin size={45} />
           <Typography variant="small" bold>

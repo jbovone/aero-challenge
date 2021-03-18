@@ -10,7 +10,9 @@ import { media } from "../utils/media";
 
 const style = css({
   ...flex("space-between", "stretch"),
+  padding: 10,
   minHeight: 100,
+  minWidth: 400,
   img: {
     borderRadius: 6,
     border: `1px solid ${colors.boxShadow}`,
@@ -33,22 +35,30 @@ const style = css({
     background: colors.primary,
     borderRadius: 5,
     padding: "1em",
-    maxHeight: 90,
+    maxHeight: "40%",
     svg: {
       height: 20,
       width: 20,
       fill: "whitesmoke",
     },
-    ...media(470, {
+  },
+  ...media(470, {
+    minWidth: "unset",
+    button: {
       svg: {
         height: 13,
         width: 13,
       },
-    }),
-  },
+    },
+  }),
 });
 
-const Media: React.FC<cardProps> = ({ product, setToCart }) => {
+interface mediaProps {
+  setToCart: React.Dispatch<React.SetStateAction<Product[]>>;
+  product: Product;
+}
+
+const Media: React.FC<mediaProps> = ({ product, setToCart }) => {
   return (
     <>
       <article className={style}>
@@ -66,7 +76,7 @@ const Media: React.FC<cardProps> = ({ product, setToCart }) => {
           <FaTrash />
         </Button>
       </article>
-      <Separator />
+      <Separator mt={20} mb={15} />
     </>
   );
 };

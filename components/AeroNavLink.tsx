@@ -18,7 +18,6 @@ const Decorator = styled.div({
 });
 
 const AeroLink = styled.a({
-  margin: 10,
   cursor: "pointer",
   position: "relative",
   "&:hover": {

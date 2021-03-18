@@ -15,21 +15,30 @@ interface Product {
 interface user {
   points: 0;
   name: string;
+  redeemHistory: Product[];
 }
 
 interface cardProps {
   product: Product;
-  order?: number;
+  redeemed: boolean;
+  bagged: boolean;
   setRedeem: React.Dispatch<
     React.SetStateAction<Product[]>,
     React.SetStateAction<dialogProps>
   >;
 }
 
-type dialogDispatchEnum = "ADD_TO_BAG" | "PURCHASE_SUCESS" | "WELLCOME_SUCCESS";
-interface dialogProps {
-  id: dialogDispatchEnum | null;
-  title: string | null;
+type dialogDispatchEnum =
+  | "ADD_TO_BAG"
+  | "PURCHASE_SUCCESS"
+  | "WELCOME_SUCCESS"
+  | "EMPTY_BAG";
+
+interface DialogProps {
+  title?: string;
+  dialogType: dialogDispatchEnum;
+  id: number;
+  cb?: () => void;
 }
 
 type orderBy = "Most Recent" | "Lowest Price" | "Highest Price";

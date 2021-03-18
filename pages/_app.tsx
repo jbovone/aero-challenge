@@ -9,18 +9,16 @@ import { dialogDispatch } from "../constants/dialogs";
 const MyApp: AppComponent = ({ Component, pageProps }) => {
   const [user, setUser] = useState<user>();
   const [cart, setToCart] = useState<Product[]>([]);
-  const [dialog, setDialog] = useState<dialogProps>({
-    id: null,
-    title: null,
-  });
+  const [dialog, setDialog] = useState<DialogProps | null>(null);
 
   useEffect(() => {
     fetch("api/auth/me").then((res) =>
       res.json().then((user: user) => {
         setUser(() => ({ ...user }));
         setDialog(() => ({
-          id: dialogDispatch.welcomeSuccess,
+          dialogType: dialogDispatch.welcomeSuccess,
           title: user.name,
+          id: 1,
         }));
       })
     );
@@ -30,12 +28,20 @@ const MyApp: AppComponent = ({ Component, pageProps }) => {
     <>
       <Navigation coins={user ? user.points : 0} bagLength={cart.length} />
       <Header />
-      <Dialog dialogId={dialog.id} title={dialog.title} />
+      {dialog && (
+        <Dialog
+          dialogType={dialog.dialogType}
+          title={dialog.title}
+          id={dialog.id}
+          cb={dialog.cb}
+        />
+      )}
       <Component
         {...pageProps}
         setToCart={setToCart}
         setDialog={setDialog}
         cart={cart}
+        redeemHistory={user ? user.redeemHistory : []}
         coins={user ? user.points : 0}
       />
     </>

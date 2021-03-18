@@ -1,87 +1,104 @@
-import React, { useEffect, useRef, useState } from "react";
-import { css, CSSInterpolation, keyframes, cx } from "@emotion/css";
+import React, { useEffect, useState } from "react";
+import { css, cx, CSSInterpolation, CSSObject } from "@emotion/css";
 import { boxShadow } from "../constants/boxShadow";
 import Typography from "./Typography";
 import { flex } from "../utils/flex";
 import { colors } from "../constants/colors";
+import Progress from "./Progress";
 
-interface DialogProps {
-  title: string | null;
-  dialogId: dialogDispatchEnum | null;
-}
+const TIMMER = 1300;
 
 interface dialogTypeProps {
-  timeToLive: number;
-  title: string | null;
+  title: string;
 }
 
-const ProductBagSuccess: React.FC<DialogProps> = ({ title }) => {
+const ProductBagSuccess: React.FC<dialogTypeProps> = ({ title, children }) => {
   return (
     <>
-      <Typography variant="h2">{title}</Typography>
-      <Typography variant="p" color={colors.decorators[0]} bold>
+      {children}
+      <Typography variant="p">{title}</Typography>
+      <Typography variant="small" color={colors.decorators[0]} bold>
         Added to Your Bag!
       </Typography>
     </>
   );
 };
 
-const WellcomeSuccess: React.FC<DialogProps> = ({ title }) => {
-  return <Typography variant="h2">Wellcome {title}</Typography>;
+const EmptyBag: React.FC<dialogTypeProps> = ({ title, children }) => {
+  return (
+    <>
+      {children}
+      <Typography variant="p" color={colors.decorators[0]} bold>
+        Empty Bag!
+      </Typography>
+      <Typography variant="small" color={colors.decorators[0]} bold>
+        We will redirect you Prizes!
+      </Typography>
+    </>
+  );
 };
 
-const dialogs: any = {
+const WelcomeSuccess: React.FC<dialogTypeProps> = ({ title, children }) => {
+  return (
+    <>
+      {children}
+      <Typography variant="h2">Welcome {title}</Typography>
+    </>
+  );
+};
+
+const dialogs: Readonly<Record<
+  dialogDispatchEnum,
+  React.FC<dialogTypeProps>
+>> = {
   ADD_TO_BAG: ProductBagSuccess,
-  WELLCOME_SUCCESS: WellcomeSuccess,
-} as const;
+  EMPTY_BAG: EmptyBag,
+  WELCOME_SUCCESS: WelcomeSuccess,
+  PURCHASE_SUCCESS: WelcomeSuccess,
+};
 
-const Dialog: React.FC<DialogProps> = ({ dialogId, title }) => {
+const Dialog: React.FC<DialogProps> = ({ dialogType, title, id, cb }) => {
   const [open, setOpen] = useState(false);
-
-  const Component = dialogId ? dialogs[dialogId]! : null;
-  const ref = useRef("");
+  const Component = dialogs[dialogType];
 
   const style: CSSInterpolation = css({
     ...flex("space-between", "center", "column"),
     boxShadow: boxShadow,
-    borderRadius: 10,
     position: "fixed",
     background: colors.fontInverse,
-    padding: "3em 2.3em",
-    top: "20%",
-    zIndex: 10000,
-    transition: ".5s ease-in-out",
-    border: `solid 1px ${colors.primary}`,
-    "&>progress": {
-      position: "absolute",
-      width: "100%",
-      height: 26,
-      top: -7,
-
-      color: colors.decorators,
-    },
+    padding: "2.5em 1.5em",
+    top: "15%",
+    margin: 20,
+    right: 0,
+    zIndex: open ? 10000 : -100,
+    transition: ".3s ease-in-out",
+  });
+  const closeStyle: CSSInterpolation = css({
+    opacity: 0,
+    transform: "translate(100%)",
   });
 
   useEffect(() => {
-    if (!dialogId) return;
-
-    const timeout = setTimeout(() => {
-      setOpen(() => false);
-    }, 4000);
-
-    if (open === false) {
-      setOpen(() => true);
-    }
-
-    return () => {
-      window.clearTimeout(timeout);
-    };
-  }, [dialogId, title]);
+    setOpen(() => true);
+  }, [id]);
 
   return (
-    <div className={style}>
-      <progress value={7} max={10}></progress>
-      {Component ? title ? <Component title={title} /> : <Component /> : null}
+    <div
+      className={cx(style, {
+        [closeStyle]: !open,
+      })}
+    >
+      <Component title={title || ""}>
+        <Progress
+          key={id}
+          timmer={TIMMER}
+          cb={() => {
+            console.log("cb", cb);
+            if (cb) cb();
+            setOpen(() => false);
+          }}
+        />
+      </Component>
     </div>
   );
 };
