@@ -1,5 +1,4 @@
 import { css, CSSInterpolation } from "@emotion/css";
-import Image from "next/image";
 import Typography from "./Typography";
 import React from "react";
 import { colors } from "../constants/colors";

@@ -16,7 +16,7 @@ const prog = keyframes`
 
 const Progress: React.FC<ProgressProps> = ({ timmer, cb }) => {
   const style: CSSInterpolation = css({
-    background: colors.decorators[0],
+    background: colors.decorator,
     height: "10px",
     width: "0%",
     position: "absolute",

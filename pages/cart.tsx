@@ -21,19 +21,10 @@ interface cartProps {
   setDialog: React.Dispatch<SetStateAction<DialogProps>>;
 }
 
-const style: CSSObject = {
-  ...flex("center", "flex-start"),
-  minHeight: "80vh",
-  flexWrap: "wrap",
-  ...media(840, {
-    "&>*": {
-      width: "100%",
-    },
-  }),
-};
-
 const EmptyBag = styled.section((props: { boxShadow?: string }) => ({
   flex: 1,
+  maxWidth: 800,
+  background: "white",
   ...flex("space-evenly", "center", "column"),
   "box-shadow": props.boxShadow,
   margin: "10px 15px",
@@ -91,7 +82,22 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
   const [redeem, setRedeem] = useState({
     loading: false,
     error: false,
+    success: false,
   });
+  const style: CSSObject = {
+    ...flex("center", "flex-start"),
+    minHeight: "80vh",
+    flexWrap: "wrap",
+    background: redeem.success
+      ? `url('/images/successBackground.svg')`
+      : "unset",
+    ...media(840, {
+      "&>*": {
+        width: "100%",
+      },
+    }),
+  };
+
   const router = useRouter();
   useEffect(() => {
     if (redeem.loading) {
@@ -100,11 +106,20 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
           data: cart.map((prize) => prize.id),
         })
         .then((res) => {
-          setRedeem((state) => ({ ...state, loading: false, error: false }));
+          setRedeem((state) => ({
+            ...state,
+            loading: false,
+            error: false,
+            success: true,
+          }));
           setToCart(() => []);
         })
         .catch(() => {
-          setRedeem((state) => ({ ...state, loading: false, error: true }));
+          setRedeem((state) => ({
+            ...state,
+            loading: false,
+            error: true,
+          }));
         });
     }
   }, [redeem.loading]);
@@ -112,18 +127,33 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
   useEffect(() => {
     if (cart.length === 0) {
       setDialog((state) => ({
-        dialogType: dialogDispatch.emptyBag,
+        dialogType: redeem.success
+          ? dialogDispatch.purchaseSuccess
+          : dialogDispatch.emptyBag,
         id: state.id + 1,
+        timmer: redeem.success ? 4000 : 1800,
         cb: () => router.push("/redeem"),
       }));
     }
   }, [cart, setDialog, setToCart]);
+
   return (
     <View cssProps={style}>
       {cart.length === 0 ? (
         <EmptyBag boxShadow={boxShadow}>
+          {redeem.success && (
+            <img
+              className="emojidex-emoji"
+              src="https://cdn.emojidex.com/emoji/seal/tada.png"
+              emoji-code="tada"
+              emoji-moji="🎉"
+              alt="tada"
+            />
+          )}
           <Typography variant="h2" bold>
-            Oh! ..seems like the cart is empty
+            {redeem.success
+              ? "Contragutation for your purchase!"
+              : "Oh! ..seems like the cart is empty"}
           </Typography>
           <Typography variant="small" bold>
             Go back to shopping for some awesome Prizes!
@@ -167,15 +197,15 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
           </ul>
           <div />
           <PillButton
-            title={"Redeem Prizes"}
+            title={coins - total < 0 ? "Not Enough Points" : "Redeem Prizes"}
             onClick={() => {
               setRedeem((state) => ({ ...state, loading: true }));
             }}
-            disabled={total <= 0}
+            disabled={total <= 0 || coins - total < 0}
           />
           {redeem.error && (
             <Typography bold variant="small" color="red">
-              Service Unavailable at the Moment
+              Service Unavailable at the moment.
             </Typography>
           )}
         </TotalViewer>

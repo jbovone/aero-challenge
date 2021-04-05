@@ -24,6 +24,7 @@ interface redeem {
   setToCart: React.Dispatch<SetStateAction<Product[]>>;
   setDialog: React.Dispatch<SetStateAction<DialogProps>>;
   cart: Product[];
+  coins: number;
   redeemHistory: Product[];
 }
 
@@ -46,9 +47,7 @@ export const getStaticProps: GetStaticProps = async (props) => {
 const ControlsContainer = styled.section({
   ...flex("flex-start"),
   paddingTop: "80px",
-  "&>*": {
-    marginBottom: 40,
-  },
+
   ...media(1240, {
     ...wrap("space-evenly", "space-evenly"),
   }),
@@ -58,6 +57,7 @@ const NamedButtonPannel = styled.div({
   ...flex("flex-start"),
   flex: 1,
   minHeight: "20vh",
+
   ...media(1240, {
     flex: "unset",
     width: "100%",
@@ -68,6 +68,9 @@ const NamedButtonPannel = styled.div({
   }),
   ...media(890, {
     flexDirection: "column",
+    justifyContent: "space-between",
+    height: 230,
+    marginBottom: 40,
     h2: {
       alignSelf: "flex-start",
     },
@@ -108,15 +111,11 @@ const Footer = styled.section({
     ...wrap("space-evenly", "space-evenly"),
     "div:nth-of-type(1)": {
       order: 1,
-      marginTop: 40,
       width: "100%",
-    },
-    "div:nth-of-type(2)": {
-      flex: 1,
     },
   }),
   ...media(740, {
-    marginBottom: "20px !important",
+    marginBottom: "20px",
     "div:nth-of-type(2), div:nth-of-type(3)": {
       width: "100%",
     },
@@ -125,7 +124,7 @@ const Footer = styled.section({
 
 const ViewStyles: CSSObject = {
   "&>section": {
-    width: "88%",
+    width: "80%",
     margin: "auto",
   },
   ...media(1240, {
@@ -141,28 +140,27 @@ const Reedem: React.FC<redeem> = ({
   setDialog,
   cart,
   redeemHistory,
+  coins,
 }) => {
   const [itemsPerPage, setItemsPerPage] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
   const { activeOrder, assorted, setOrderBy, orderTypes } = useSorted(products);
   const pagination = usePagination(itemsPerPage, assorted);
 
-  const ProductCounter: React.FC = () => (
-    <div
-      style={{
-        marginRight: "1em",
-        borderRight: `solid 1px ${colors.fontSecondary}`,
-      }}
-    >
-      <Typography variant="h2">
-        {pagination[page - 1].length * page} of {products.length} products
-      </Typography>
-    </div>
-  );
-
-  useEffect(() => {
-    setPage(() => 1);
-  }, [itemsPerPage]);
+  const ProductCounter: React.FC = () => {
+    const ProductCounterContainer = styled.div({
+      margin: 0,
+      borderRight: `solid 1px ${colors.fontSecondary}`,
+      maxWidth: 220,
+    });
+    return (
+      <ProductCounterContainer>
+        <Typography variant="h2">
+          {pagination[page - 1].length * page} of {products.length} products
+        </Typography>
+      </ProductCounterContainer>
+    );
+  };
 
   return (
     <View cssProps={ViewStyles}>
@@ -213,6 +211,7 @@ const Reedem: React.FC<redeem> = ({
               redeemed={redeemHistory.some((item) => item.id === product.id)}
               bagged={cart.some((item) => item.id === product.id)}
               product={product}
+              coins={coins}
               setRedeem={() => {
                 setToCart((products) => [...products, product]);
                 setDialog((state) => ({

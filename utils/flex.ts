@@ -1,17 +1,17 @@
 import { CSSObject } from "@emotion/css";
 
-type col = "column";
+type col = "column" | "row" | "column-reverse" | "row-reverse";
 
 export const flex = (
   justify?: string,
   align?: string,
-  column?: col
+  direction?: col
 ): CSSObject => {
   return {
     display: "flex",
     justifyContent: justify || "center",
     alignItems: align || "center",
-    flexDirection: column || "row",
+    flexDirection: direction || "row",
   };
 };
 

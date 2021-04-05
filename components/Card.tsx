@@ -9,16 +9,17 @@ import Curtain from "./Curtain";
 import Separator from "./Separator";
 import Button from "./normalizers/Button";
 import { boxShadow } from "../constants/boxShadow";
+import { FaCheck } from "react-icons/fa";
 
 const Card: React.FC<cardProps> = ({
   product,
+  coins,
   setRedeem,
   redeemed,
   bagged,
 }) => {
   const [selected, setSelected] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
-
   const style: CSSInterpolation = css({
     width: "100%",
     "&>*": {
@@ -34,9 +35,21 @@ const Card: React.FC<cardProps> = ({
     transform: selected ? "scale(1.2)" : "none",
     zIndex: selected ? 100 : 99,
     header: {
-      ...flex("space-between"),
+      ...flex("space-between", "center", "row-reverse"),
       div: {
-        ...flex(),
+        "svg:nth-child(1)": {
+          marginTop: 9,
+          transition: ".8s",
+          transform: bagged
+            ? " translate(-15px, 20px) scale(1.9)"
+            : "scale(1.1)",
+        },
+        "svg:nth-child(2)": {
+          transition: ".8s",
+          transform: `translate(-38px, 10px) ${
+            bagged ? "scale(2.8)" : " scale(0.1)"
+          }`,
+        },
       },
     },
     img: {
@@ -44,7 +57,9 @@ const Card: React.FC<cardProps> = ({
     },
   });
 
-  const redeemedStyle: CSSInterpolation = css({});
+  const redeemedStyle: CSSInterpolation = css({
+    display: "none",
+  });
   const baggedStyle: CSSInterpolation = css({});
   const disabled = redeemed || bagged;
 
@@ -54,16 +69,20 @@ const Card: React.FC<cardProps> = ({
     }
   }, [selected]);
   return (
-    <article className={style}>
+    <article
+      className={cx(style, {
+        [redeemedStyle]: redeemed,
+        [baggedStyle]: bagged,
+      })}
+    >
       <Button
         onClick={() => !disabled && setSelected(true)}
         onFocus={() => !disabled && setSelected(true)}
       >
         <header>
-          <Bag />
           <div>
-            <Typography color={colors.fontSecondary}>{product.cost}</Typography>
-            <Coin />
+            <Bag />
+            <FaCheck fill="rgb(69, 221, 69, 0.7)" />
           </div>
         </header>
         <img src={"/images/products/Nintendo3DS-x1.png"} />
@@ -77,6 +96,7 @@ const Card: React.FC<cardProps> = ({
         product={product}
         setRedeem={setRedeem}
         setSelected={setSelected}
+        availableCoins={coins}
       />
     </article>
   );

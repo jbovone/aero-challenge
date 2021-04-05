@@ -39,11 +39,8 @@ const style = css({
 });
 
 const pulsate = keyframes`
-  0% {
-    transform: scale(1)
-  }
   50% {
-    transform: scale(1.09)
+    transform: scale(1.1)
   }
 `;
 
@@ -56,7 +53,7 @@ const Badge = styled.div({
   right: 5,
   height: 22,
   width: 22,
-  animation: `${pulsate} 1.5s ease infinite`,
+  animation: `${pulsate} 3.5s ease infinite`,
 });
 
 const Navigation: React.FC<NavigationProps> = ({ coins, bagLength }) => {
@@ -66,10 +63,10 @@ const Navigation: React.FC<NavigationProps> = ({ coins, bagLength }) => {
         <Aerolab />
       </a>
       <aside>
-        <AeroNavLink title="Home" href="/Home" />
+        <AeroNavLink title="Home" href="/" />
         <AeroNavLink title="Prizes" href="/redeem" />
         <div className="coins">
-          <Coin size={45} />
+          <Coin />
           <Typography variant="small" bold>
             Your Coins
           </Typography>

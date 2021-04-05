@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import React, { createRef, useEffect } from "react";
+import React from "react";
 import { colors } from "../constants/colors";
 import { flex } from "../utils/flex";
 import PillButton from "./PillButton";
@@ -8,13 +8,15 @@ import Typography from "./Typography";
 
 type curtainProps = {
   show: boolean;
+  availableCoins: number;
   setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Curtain = React.forwardRef<
   HTMLButtonElement,
-  curtainProps & Omit<cardProps, "redeemed" | "bagged">
->(({ show, product, setRedeem, setSelected }, ref) => {
+  curtainProps & Omit<cardProps, "redeemed" | "bagged" | "coins">
+>(({ show, product, setRedeem, setSelected, availableCoins }, ref) => {
+  const isReedemeable = availableCoins - product.cost > 0;
   const style = css({
     position: "absolute",
     bottom: 0,
@@ -22,30 +24,89 @@ const Curtain = React.forwardRef<
     transition: ".3s",
     height: show ? "100%" : 0,
     background: colors.primaryAlpha,
-    ...flex("space-evenly", "center", "column"),
-    span: {
-      ...flex(),
+    padding: show ? 20 : 0,
+    ...flex("space-between", "center", "column"),
+    header: {
+      background: "white",
+      borderRadius: 10,
+      padding: 10,
+      width: "90%",
+      border: `1px solid ${colors.fontSecondary}`,
+      ...flex("flex-start", "flex-start", "column"),
+      ul: {
+        width: "100%",
+        position: "relative",
+        li: {
+          "span small": {
+            margin: 0,
+          },
+          span: {
+            ...flex("center", "center"),
+          },
+          ...flex("space-between"),
+          padding: 3,
+          width: "100%",
+        },
+        svg: {
+          height: 15,
+          width: 15,
+        },
+      },
     },
   });
+
+  interface listPorps {
+    listKey: string;
+    listValue: string | number;
+  }
+
+  const ListItem: React.FC<listPorps> = ({ listKey, listValue }) => {
+    return (
+      <li>
+        <span>
+          <Coin />
+          <Typography variant="small" color={colors.fontPrimary}>
+            {listKey}
+          </Typography>
+        </span>
+        <Typography variant="small" bold color={colors.fontPrimary}>
+          {listValue}
+        </Typography>
+      </li>
+    );
+  };
 
   return (
     <div className={style}>
       {show && (
         <>
-          <span>
-            <Typography variant="h2" color={colors.fontInverse}>
-              {product.cost}
+          <header>
+            <Typography variant="p" color={colors.fontSecondary}>
+              {product.name}:
             </Typography>
-            <Coin />
-          </span>
+            <ul>
+              <ListItem listKey="Your coins:" listValue={availableCoins} />
+              <ListItem listKey="Will cost:" listValue={product.cost} />
+              {isReedemeable ? (
+                <ListItem
+                  listKey="Coins left:"
+                  listValue={availableCoins - product.cost}
+                />
+              ) : (
+                <Typography variant="small">
+                  -Not enough points to claim!
+                </Typography>
+              )}
+            </ul>
+          </header>
           <PillButton
             ref={ref}
             onClick={(e) => {
-              setRedeem();
+              isReedemeable && setRedeem();
               e.currentTarget.blur();
             }}
             onBlur={() => setSelected(false)}
-            title="Redeem now"
+            title={availableCoins - product.cost < 0 ? "CLOSE" : "REDEEM NOW"}
           />
         </>
       )}

@@ -33,6 +33,7 @@ const MyApp: AppComponent = ({ Component, pageProps }) => {
           dialogType={dialog.dialogType}
           title={dialog.title}
           id={dialog.id}
+          timmer={dialog.timmer}
           cb={dialog.cb}
         />
       )}

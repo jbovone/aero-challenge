@@ -1,17 +1,23 @@
-import { css } from "@emotion/css";
+import { css, CSSObject } from "@emotion/css";
 import React from "react";
 import { colors } from "../constants/colors";
 
+type align = "start" | "left" | "right" | "center";
+
 interface TypographyProps {
-  variant?: "h1" | "h2" | "p" | "small";
+  variant?: "h1" | "h2" | "h3" | "p" | "small";
   color?: string;
   bold?: boolean;
+  align?: align;
+  cssProps?: CSSObject;
 }
 
 const Typography: React.FC<TypographyProps> = ({
   variant = "p",
   color = colors.fontPrimary,
   bold,
+  align,
+  cssProps,
   children,
 }) => {
   const styleCase = {
@@ -21,6 +27,10 @@ const Typography: React.FC<TypographyProps> = ({
     },
     h2: {
       fontSize: "2.4rem",
+      fontWeight: bold ? 900 : 400,
+    },
+    h3: {
+      fontSize: "2.1rem",
       fontWeight: bold ? 900 : 400,
     },
     p: {
@@ -36,8 +46,9 @@ const Typography: React.FC<TypographyProps> = ({
   const style = css({
     fontFamily: "'Source Sans Pro', sans-serif",
     color: color,
-    textAlign: "start",
+    textAlign: align ? align : "start",
     ...styleCase[variant],
+    ...cssProps,
   });
 
   const Components = {

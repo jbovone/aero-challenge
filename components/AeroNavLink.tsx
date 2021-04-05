@@ -14,7 +14,7 @@ const Decorator = styled.div({
   width: "0%",
   position: "absolute",
   transition: "500ms",
-  background: colors.decorators[0],
+  background: colors.decorator,
 });
 
 const AeroLink = styled.a({

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { css, cx, CSSInterpolation, CSSObject } from "@emotion/css";
+import { css, cx, CSSInterpolation } from "@emotion/css";
 import { boxShadow } from "../constants/boxShadow";
 import Typography from "./Typography";
 import { flex } from "../utils/flex";
@@ -17,21 +17,33 @@ const ProductBagSuccess: React.FC<dialogTypeProps> = ({ title, children }) => {
     <>
       {children}
       <Typography variant="p">{title}</Typography>
-      <Typography variant="small" color={colors.decorators[0]} bold>
+      <Typography variant="small" color={colors.decorator} bold>
         Added to Your Bag!
       </Typography>
     </>
   );
 };
 
-const EmptyBag: React.FC<dialogTypeProps> = ({ title, children }) => {
+const PurchaceSuccess: React.FC<dialogTypeProps> = ({ children }) => {
   return (
     <>
       {children}
-      <Typography variant="p" color={colors.decorators[0]} bold>
+      <Typography variant="h3">Congratulations for your Purchase!</Typography>
+      <Typography variant="small" color={colors.decorator} bold>
+        We will redirect you to reedem.
+      </Typography>
+    </>
+  );
+};
+
+const EmptyBag: React.FC<dialogTypeProps> = ({ children }) => {
+  return (
+    <>
+      {children}
+      <Typography variant="p" bold>
         Empty Bag!
       </Typography>
-      <Typography variant="small" color={colors.decorators[0]} bold>
+      <Typography variant="small" color={colors.decorator} bold>
         We will redirect you Prizes!
       </Typography>
     </>
@@ -54,13 +66,18 @@ const dialogs: Readonly<Record<
   ADD_TO_BAG: ProductBagSuccess,
   EMPTY_BAG: EmptyBag,
   WELCOME_SUCCESS: WelcomeSuccess,
-  PURCHASE_SUCCESS: WelcomeSuccess,
+  PURCHASE_SUCCESS: PurchaceSuccess,
 };
 
-const Dialog: React.FC<DialogProps> = ({ dialogType, title, id, cb }) => {
+const Dialog: React.FC<DialogProps> = ({
+  dialogType,
+  title,
+  id,
+  cb,
+  timmer,
+}) => {
   const [open, setOpen] = useState(false);
   const Component = dialogs[dialogType];
-
   const style: CSSInterpolation = css({
     ...flex("space-between", "center", "column"),
     boxShadow: boxShadow,
@@ -91,9 +108,8 @@ const Dialog: React.FC<DialogProps> = ({ dialogType, title, id, cb }) => {
       <Component title={title || ""}>
         <Progress
           key={id}
-          timmer={TIMMER}
+          timmer={timmer ? timmer : TIMMER}
           cb={() => {
-            console.log("cb", cb);
             if (cb) cb();
             setOpen(() => false);
           }}

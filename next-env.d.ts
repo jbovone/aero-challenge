@@ -22,6 +22,7 @@ interface cardProps {
   product: Product;
   redeemed: boolean;
   bagged: boolean;
+  coins: number;
   setRedeem: React.Dispatch<
     React.SetStateAction<Product[]>,
     React.SetStateAction<dialogProps>
@@ -36,6 +37,7 @@ type dialogDispatchEnum =
 
 interface DialogProps {
   title?: string;
+  timmer?: number;
   dialogType: dialogDispatchEnum;
   id: number;
   cb?: () => void;
