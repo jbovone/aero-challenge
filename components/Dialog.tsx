@@ -17,7 +17,7 @@ const ProductBagSuccess: React.FC<dialogTypeProps> = ({ title, children }) => {
     <>
       {children}
       <Typography variant="p">{title}</Typography>
-      <Typography variant="small" color={colors.decorator} bold>
+      <Typography variant="small" color="decorator" bold>
         Added to Your Bag!
       </Typography>
     </>
@@ -29,7 +29,7 @@ const PurchaceSuccess: React.FC<dialogTypeProps> = ({ children }) => {
     <>
       {children}
       <Typography variant="h3">Congratulations for your Purchase!</Typography>
-      <Typography variant="small" color={colors.decorator} bold>
+      <Typography variant="small" color="decorator" bold>
         We will redirect you to reedem.
       </Typography>
     </>
@@ -43,7 +43,7 @@ const EmptyBag: React.FC<dialogTypeProps> = ({ children }) => {
       <Typography variant="p" bold>
         Empty Bag!
       </Typography>
-      <Typography variant="small" color={colors.decorator} bold>
+      <Typography variant="small" color="decorator" bold>
         We will redirect you Prizes!
       </Typography>
     </>
@@ -54,7 +54,7 @@ const WelcomeSuccess: React.FC<dialogTypeProps> = ({ title, children }) => {
   return (
     <>
       {children}
-      <Typography variant="h2">Welcome {title}</Typography>
+      <Typography variant="h4">Welcome {title}</Typography>
     </>
   );
 };

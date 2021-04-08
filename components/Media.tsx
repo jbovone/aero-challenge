@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { FaTrash } from "react-icons/fa";
 import Button from "./normalizers/Button";
 import { css } from "@emotion/css";
@@ -7,6 +7,7 @@ import Typography from "./Typography";
 import { colors } from "../constants/colors";
 import Separator from "./Separator";
 import { media } from "../utils/media";
+import { CodeFixAction } from "typescript";
 
 const style = css({
   ...flex("space-between", "stretch"),
@@ -54,11 +55,11 @@ const style = css({
 });
 
 interface mediaProps {
-  setToCart: React.Dispatch<React.SetStateAction<Product[]>>;
+  appDispatch: Dispatch<action>;
   product: Product;
 }
 
-const Media: React.FC<mediaProps> = ({ product, setToCart }) => {
+const Media: React.FC<mediaProps> = ({ product, appDispatch }) => {
   return (
     <>
       <article className={style}>
@@ -70,7 +71,7 @@ const Media: React.FC<mediaProps> = ({ product, setToCart }) => {
         </div>
         <Button
           onClick={() =>
-            setToCart((items) => items.filter((item) => item.id !== product.id))
+            appDispatch({ type: "removeFromCart", payload: product })
           }
         >
           <FaTrash />

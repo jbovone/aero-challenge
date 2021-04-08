@@ -11,12 +11,14 @@ button,
 p,
 h1,
 h2,
-h3 {
-  margin: 0.3em 0.7em;
+h3,
+h4 {
+  margin: 8px;
 }
 
 :root {
   font-size: 62.5%; /* normalizes: 1rem = 10px  the rest goes in typography components*/
+  --header-height: 100px;
 }
 
 body {

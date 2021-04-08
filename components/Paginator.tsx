@@ -1,4 +1,5 @@
-import React, { SetStateAction } from "react";
+import { css, CSSObject } from "@emotion/react";
+import React, { SetStateAction, SyntheticEvent } from "react";
 import { Input, Select } from "./FancyInputs";
 import Button from "./normalizers/Button";
 import PaginationIcon from "./svg/PaginationIcon";
@@ -40,7 +41,6 @@ export const Paginator: React.FC<PaginatorProps> = ({
   setItemsPerPage,
 }) => {
   function handlePageChange(value: string | "") {
-    if (!value) return;
     if (isPageValid(value)) {
       setPage(() => parseInt(value));
     }
@@ -48,6 +48,11 @@ export const Paginator: React.FC<PaginatorProps> = ({
   function isPageValid(page: string) {
     return Boolean(parseInt(page) >= 1 && parseInt(page) <= totalPages);
   }
+  const inputStyle: CSSObject = {
+    maxWidth: 45,
+    textAlign: "center",
+  };
+
   return (
     <>
       <div>
@@ -59,9 +64,11 @@ export const Paginator: React.FC<PaginatorProps> = ({
         />
         <Typography>Go to page</Typography>
         <Input
-          onChange={handlePageChange}
-          initialState={String(curentPage)}
-          imperativeSetValue={String(curentPage)}
+          onChange={({
+            currentTarget: { value },
+          }: SyntheticEvent<HTMLInputElement>) => handlePageChange(value)}
+          value={String(curentPage)}
+          cssProps={inputStyle}
         />
         <Typography>of {totalPages}</Typography>
         <NextBtn

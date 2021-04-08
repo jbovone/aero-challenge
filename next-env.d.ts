@@ -12,8 +12,20 @@ interface Product {
   category: string;
 }
 
+type actionTypes =
+  | "addToCart"
+  | "removeFromCart"
+  | "setUser"
+  | "reedemSuccess"
+  | "bagEmpty";
+
+interface action {
+  type: actionTypes;
+  payload?: any;
+}
+
 interface user {
-  points: 0;
+  points: number;
   name: string;
   redeemHistory: Product[];
 }
@@ -22,11 +34,8 @@ interface cardProps {
   product: Product;
   redeemed: boolean;
   bagged: boolean;
-  coins: number;
-  setRedeem: React.Dispatch<
-    React.SetStateAction<Product[]>,
-    React.SetStateAction<dialogProps>
-  >;
+  points: number;
+  setRedeem: Dispatch<action>;
 }
 
 type dialogDispatchEnum =
@@ -41,6 +50,14 @@ interface DialogProps {
   dialogType: dialogDispatchEnum;
   id: number;
   cb?: () => void;
+}
+
+type forms = "sign-in" | "sign-up";
+
+interface formHandlerProps {
+  appDispatch: Dispatch<action>;
+  show: boolean;
+  form: forms;
 }
 
 type orderBy = "Most Recent" | "Lowest Price" | "Highest Price";

@@ -8,4 +8,5 @@ export const colors = {
   buttonInactive: "#ededed",
   boxShadow: "rgba(0,0,0,0.10)",
   decorator: "rgb(255, 79, 0)",
+  red: "red",
 };

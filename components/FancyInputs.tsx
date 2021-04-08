@@ -1,21 +1,11 @@
-import { css, CSSInterpolation, cx } from "@emotion/css";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { css, CSSInterpolation, CSSObject, cx } from "@emotion/css";
+import React, { Dispatch, InputHTMLAttributes, SetStateAction } from "react";
 import { colors } from "../constants/colors";
-
-interface InputProps {
-  onChange: (e: string) => void;
-  initialState: string;
-  imperativeSetValue?: string;
-}
-interface SelectProps {
-  setValue: Dispatch<SetStateAction<number>>;
-  value: string;
-  values: number[];
-}
+import Typography from "./Typography";
 
 const fancy: CSSInterpolation = css({
   padding: 10,
-  maxWidth: 57,
+  margin: 10,
   borderRadius: 5,
   border: `1px solid ${colors.fontSecondary}`,
   ":focus": {
@@ -24,39 +14,44 @@ const fancy: CSSInterpolation = css({
   },
 });
 
-const selectStyle: CSSInterpolation = css({
-  maxWidth: 60,
-});
-const inputStyle: CSSInterpolation = css({
-  maxWidth: 45,
-  textAlign: "center",
-});
-
-export const Input: React.FC<InputProps> = ({
-  onChange,
-  initialState,
-  imperativeSetValue,
-}) => {
-  const [value, setValue] = useState(initialState);
-  useEffect(() => {
-    if (imperativeSetValue && imperativeSetValue !== value) {
-      setValue(imperativeSetValue);
-    }
-  }, [imperativeSetValue]);
+interface InputProps {
+  label?: string;
+  cssProps?: CSSObject;
+}
+export const Input: React.FC<
+  InputProps & InputHTMLAttributes<HTMLInputElement>
+> = ({ onChange, value, cssProps, label, ...props }) => {
+  const extraStyle: CSSInterpolation = css({
+    ...cssProps,
+  });
   return (
-    <input
-      onChange={(e) => {
-        onChange(e.target.value);
-        setValue(() => e.target.value);
-      }}
-      value={value}
-      className={cx(fancy, inputStyle)}
-      type="text"
-    />
+    <>
+      {Boolean(label) && (
+        <label htmlFor={props.id}>
+          <Typography bold>{label}</Typography>
+        </label>
+      )}
+      <input
+        {...props}
+        onChange={onChange}
+        value={value}
+        className={cx(fancy, extraStyle)}
+      />
+    </>
   );
 };
 
+interface SelectProps {
+  setValue: Dispatch<SetStateAction<number>>;
+  value: string;
+  values: number[];
+}
+
 export const Select: React.FC<SelectProps> = ({ setValue, values, value }) => {
+  const selectStyle: CSSInterpolation = css({
+    maxWidth: 60,
+  });
+
   return (
     <select
       className={cx(fancy, selectStyle)}

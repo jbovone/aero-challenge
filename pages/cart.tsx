@@ -1,6 +1,6 @@
 import { CSSObject } from "@emotion/css";
 import styled from "@emotion/styled";
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import Media from "../components/Media";
 import View from "../components/normalizers/View";
 import PillButton from "../components/PillButton";
@@ -11,15 +11,7 @@ import { flex } from "../utils/flex";
 import { media } from "../utils/media";
 import Separator from "../components/Separator";
 import axios from "axios";
-import { dialogDispatch } from "../constants/dialogs";
 import { useRouter } from "next/router";
-
-interface cartProps {
-  cart: Product[];
-  coins: number;
-  setToCart: React.Dispatch<SetStateAction<Product[]>>;
-  setDialog: React.Dispatch<SetStateAction<DialogProps>>;
-}
 
 const EmptyBag = styled.section((props: { boxShadow?: string }) => ({
   flex: 1,
@@ -29,7 +21,6 @@ const EmptyBag = styled.section((props: { boxShadow?: string }) => ({
   "box-shadow": props.boxShadow,
   margin: "10px 15px",
   padding: "8em 1em",
-  transform: "translateY(100%)",
   "h2, p": {
     textAlign: "center",
     marginBottom: "1em",
@@ -47,12 +38,13 @@ const MediaViewer = styled.section((props: { boxShadow?: string }) => ({
 }));
 
 const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
-  ...flex("flex-start", "flex-start", "column"),
+  ...flex("flex-start", "center", "column"),
   position: "sticky",
   alignSelf: "flex-start",
   top: "199px",
   width: "40%",
-  maxWidth: 350,
+  maxWidth: 500,
+  minWidth: 400,
   border: `solid 1px ${colors.buttonInactive} `,
   "box-shadow": props.boxShadow,
   borderRadius: 7,
@@ -64,7 +56,7 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
     margin: "11px 13px",
   },
   ul: {
-    width: "100%",
+    width: "90%",
   },
   li: {
     margin: "1em 2.4em",
@@ -75,9 +67,20 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
     alignSelf: "center",
     bottom: 5,
   },
+  "@media (max-width: 430px)": {
+    minWidth: "unset",
+    width: "90%",
+  },
 }));
 
-const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
+interface cartProps {
+  cart: Product[];
+  user: user;
+  appDispatch: Dispatch<action>;
+}
+
+const Cart: React.FC<cartProps> = ({ cart, user, appDispatch }) => {
+  const { points } = user;
   const total = cart.reduce((acc, { cost }) => acc + cost, 0);
   const [redeem, setRedeem] = useState({
     loading: false,
@@ -85,7 +88,7 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
     success: false,
   });
   const style: CSSObject = {
-    ...flex("center", "flex-start"),
+    ...flex("center", "center"),
     minHeight: "80vh",
     flexWrap: "wrap",
     background: redeem.success
@@ -98,44 +101,29 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
     }),
   };
 
-  const router = useRouter();
   useEffect(() => {
     if (redeem.loading) {
       axios
         .post("api/redeems", {
           data: cart.map((prize) => prize.id),
         })
-        .then((res) => {
-          setRedeem((state) => ({
-            ...state,
+        .then(() => {
+          setRedeem(() => ({
             loading: false,
             error: false,
             success: true,
           }));
-          setToCart(() => []);
+          appDispatch({ type: "reedemSuccess" });
         })
         .catch(() => {
-          setRedeem((state) => ({
-            ...state,
+          setRedeem(() => ({
             loading: false,
+            success: false,
             error: true,
           }));
         });
     }
   }, [redeem.loading]);
-
-  useEffect(() => {
-    if (cart.length === 0) {
-      setDialog((state) => ({
-        dialogType: redeem.success
-          ? dialogDispatch.purchaseSuccess
-          : dialogDispatch.emptyBag,
-        id: state.id + 1,
-        timmer: redeem.success ? 4000 : 1800,
-        cb: () => router.push("/redeem"),
-      }));
-    }
-  }, [cart, setDialog, setToCart]);
 
   return (
     <View cssProps={style}>
@@ -165,7 +153,11 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
             Your Prizes:
           </Typography>
           {cart.map((product) => (
-            <Media product={product} setToCart={setToCart} key={product.id} />
+            <Media
+              product={product}
+              appDispatch={appDispatch}
+              key={product.id}
+            />
           ))}
         </MediaViewer>
       )}
@@ -191,17 +183,17 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
             <li>
               <Typography>Coins after Claim:</Typography>
               <Typography bold>
-                {Boolean(cart.length) && coins - total}
+                {Boolean(cart.length) && points - total}
               </Typography>
             </li>
           </ul>
           <div />
           <PillButton
-            title={coins - total < 0 ? "Not Enough Points" : "Redeem Prizes"}
+            title={points - total < 0 ? "Not Enough Points" : "Redeem Prizes"}
             onClick={() => {
               setRedeem((state) => ({ ...state, loading: true }));
             }}
-            disabled={total <= 0 || coins - total < 0}
+            disabled={total <= 0 || points - total < 0}
           />
           {redeem.error && (
             <Typography bold variant="small" color="red">
@@ -213,4 +205,4 @@ const Chart: React.FC<cartProps> = ({ cart, coins, setToCart, setDialog }) => {
     </View>
   );
 };
-export default Chart;
+export default Cart;

@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import React from "react";
+import React, { Dispatch } from "react";
 import { colors } from "../constants/colors";
 import { flex } from "../utils/flex";
 import PillButton from "./PillButton";
@@ -9,12 +9,13 @@ import Typography from "./Typography";
 type curtainProps = {
   show: boolean;
   availableCoins: number;
+  setRedeem: () => void;
   setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Curtain = React.forwardRef<
   HTMLButtonElement,
-  curtainProps & Omit<cardProps, "redeemed" | "bagged" | "coins">
+  curtainProps & Omit<cardProps, "redeemed" | "bagged" | "points">
 >(({ show, product, setRedeem, setSelected, availableCoins }, ref) => {
   const isReedemeable = availableCoins - product.cost > 0;
   const style = css({
@@ -32,7 +33,7 @@ const Curtain = React.forwardRef<
       padding: 10,
       width: "90%",
       border: `1px solid ${colors.fontSecondary}`,
-      ...flex("flex-start", "flex-start", "column"),
+      ...flex("flex-start", "center", "column"),
       ul: {
         width: "100%",
         position: "relative",
@@ -65,11 +66,9 @@ const Curtain = React.forwardRef<
       <li>
         <span>
           <Coin />
-          <Typography variant="small" color={colors.fontPrimary}>
-            {listKey}
-          </Typography>
+          <Typography variant="small">{listKey}</Typography>
         </span>
-        <Typography variant="small" bold color={colors.fontPrimary}>
+        <Typography variant="small" bold>
           {listValue}
         </Typography>
       </li>
@@ -81,7 +80,7 @@ const Curtain = React.forwardRef<
       {show && (
         <>
           <header>
-            <Typography variant="p" color={colors.fontSecondary}>
+            <Typography variant="p" color="fontSecondary">
               {product.name}:
             </Typography>
             <ul>

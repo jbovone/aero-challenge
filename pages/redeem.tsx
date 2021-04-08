@@ -1,7 +1,7 @@
 import { CSSObject } from "@emotion/css";
 import styled from "@emotion/styled";
 import { GetStaticProps } from "next";
-import { SetStateAction, useEffect, useState } from "react";
+import { Dispatch, useState } from "react";
 import Card from "../components/Card";
 import View from "../components/normalizers/View";
 import { NextBtn, Paginator } from "../components/Paginator";
@@ -9,7 +9,6 @@ import PillButton from "../components/PillButton";
 import Separator from "../components/Separator";
 import Typography from "../components/Typography";
 import { colors } from "../constants/colors";
-import { dialogDispatch } from "../constants/dialogs";
 import { usePagination } from "../hooks/usePagination";
 import mock from "../mockData.json";
 import { apiService, toMapProduct } from "../service/service";
@@ -18,14 +17,13 @@ import { media } from "../utils/media";
 import { useSorted } from "../hooks/useSorted";
 import Head from "next/head";
 import { motion } from "framer-motion";
+import Header from "../components/Header";
 
 interface redeem {
   products: Product[];
-  setToCart: React.Dispatch<SetStateAction<Product[]>>;
-  setDialog: React.Dispatch<SetStateAction<DialogProps>>;
+  user: user;
   cart: Product[];
-  coins: number;
-  redeemHistory: Product[];
+  appDispatch: Dispatch<action>;
 }
 
 export const getStaticProps: GetStaticProps = async (props) => {
@@ -86,16 +84,17 @@ const ProductsViewer = styled.section({
   display: "grid",
   gap: "2em",
   position: "relative",
+  justifyContent: "center",
   minHeight: "50vh",
-  gridTemplateColumns: "repeat(4, auto)",
+  gridTemplateColumns: "repeat(4, 22%)",
   ...media(1240, {
-    gridTemplateColumns: "repeat(3, auto)",
+    gridTemplateColumns: "repeat(3, 30%)",
   }),
   ...media(810, {
-    gridTemplateColumns: "repeat(2, auto)",
+    gridTemplateColumns: "repeat(2, 47%)",
   }),
   ...media(520, {
-    gridTemplateColumns: "repeat(1, auto)",
+    gridTemplateColumns: "repeat(1, 97%)",
   }),
 });
 
@@ -134,14 +133,8 @@ const ViewStyles: CSSObject = {
   }),
 };
 
-const Reedem: React.FC<redeem> = ({
-  products,
-  setToCart,
-  setDialog,
-  cart,
-  redeemHistory,
-  coins,
-}) => {
+const Reedem: React.FC<redeem> = ({ products, user, cart, appDispatch }) => {
+  const { redeemHistory, points } = user;
   const [itemsPerPage, setItemsPerPage] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
   const { activeOrder, assorted, setOrderBy, orderTypes } = useSorted(products);
@@ -149,13 +142,15 @@ const Reedem: React.FC<redeem> = ({
 
   const ProductCounter: React.FC = () => {
     const ProductCounterContainer = styled.div({
-      margin: 0,
+      marginRight: 10,
+      paddingRight: 15,
       borderRight: `solid 1px ${colors.fontSecondary}`,
-      maxWidth: 220,
+      whiteSpace: "nowrap",
+      maxWidth: 250,
     });
     return (
       <ProductCounterContainer>
-        <Typography variant="h2">
+        <Typography variant="h3">
           {pagination[page - 1].length * page} of {products.length} products
         </Typography>
       </ProductCounterContainer>
@@ -163,77 +158,75 @@ const Reedem: React.FC<redeem> = ({
   };
 
   return (
-    <View cssProps={ViewStyles}>
-      <Head>
-        <title>Redeem your Points</title>
-        <link rel="icon" href="/images/icons/aerolab-logo.svg" />
-      </Head>
-      <ControlsContainer>
-        <ProductCounter />
+    <>
+      <Header />
+      <View cssProps={ViewStyles}>
+        <Head>
+          <title>Redeem your Points</title>
+          <link rel="icon" href="/images/icons/aerolab-logo.svg" />
+        </Head>
+        <ControlsContainer>
+          <ProductCounter />
 
-        <NamedButtonPannel>
-          <Typography color={colors.fontSecondary} variant="h2">
-            Sort by :
-          </Typography>
-          {orderTypes.map((type, i) => (
-            <PillButton
-              key={i}
-              onClick={(e) => {
-                setOrderBy(() => type);
-                e.currentTarget.blur();
+          <NamedButtonPannel>
+            <Typography color="fontSecondary" variant="h3">
+              Sort by :
+            </Typography>
+            {orderTypes.map((type, i) => (
+              <PillButton
+                key={i}
+                onClick={(e) => {
+                  setOrderBy(() => type);
+                  e.currentTarget.blur();
+                }}
+                title={type}
+                active={type === activeOrder}
+              />
+            ))}
+          </NamedButtonPannel>
+
+          <NextBtn
+            setPage={setPage}
+            right={true}
+            isLastPage={page === pagination.length}
+            isFirstPage={page === 1}
+          />
+        </ControlsContainer>
+        <Separator mb={40} />
+        <ProductsViewer>
+          {pagination[page - 1].map((product, i) => (
+            <motion.div
+              initial="fade"
+              layout
+              key={product.id}
+              animate={{
+                opacity: 1,
+                y: 0,
               }}
-              title={type}
-              active={type === activeOrder}
-            />
+            >
+              <Card
+                redeemed={redeemHistory.some((item) => item.id === product.id)}
+                bagged={cart.some((item) => item.id === product.id)}
+                product={product}
+                points={points}
+                setRedeem={() =>
+                  appDispatch({ type: "addToCart", payload: product })
+                }
+              />
+            </motion.div>
           ))}
-        </NamedButtonPannel>
-
-        <NextBtn
-          setPage={setPage}
-          right={true}
-          isLastPage={page === pagination.length}
-          isFirstPage={page === 1}
-        />
-      </ControlsContainer>
-      <Separator mb={40} />
-      <ProductsViewer>
-        {pagination[page - 1].map((product, i) => (
-          <motion.div
-            initial="fade"
-            layout
-            key={product.id}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-          >
-            <Card
-              redeemed={redeemHistory.some((item) => item.id === product.id)}
-              bagged={cart.some((item) => item.id === product.id)}
-              product={product}
-              coins={coins}
-              setRedeem={() => {
-                setToCart((products) => [...products, product]);
-                setDialog((state) => ({
-                  dialogType: dialogDispatch.addToBag,
-                  title: product.name,
-                  id: state.id + 1,
-                }));
-              }}
-            />
-          </motion.div>
-        ))}
-      </ProductsViewer>
-      <Footer>
-        <ProductCounter />
-        <Paginator
-          curentPage={page}
-          {...{ itemsPerPage, setItemsPerPage, setPage }}
-          totalPages={pagination.length}
-        />
-      </Footer>
-      <Separator mb={70} />
-    </View>
+        </ProductsViewer>
+        <Footer>
+          <ProductCounter />
+          <Paginator
+            curentPage={page}
+            {...{ itemsPerPage, setItemsPerPage, setPage }}
+            totalPages={pagination.length}
+          />
+        </Footer>
+        <Separator mb={70} />
+      </View>
+    </>
   );
 };
 

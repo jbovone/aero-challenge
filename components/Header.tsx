@@ -26,7 +26,7 @@ const style: CSSInterpolation = css({
 const Header: React.FC<{}> = ({}) => {
   return (
     <header className={style}>
-      <Typography variant="h1" color={colors.fontInverse}>
+      <Typography variant="h1" color="fontInverse">
         Electronics
       </Typography>
     </header>

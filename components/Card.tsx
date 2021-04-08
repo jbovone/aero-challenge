@@ -13,7 +13,7 @@ import { FaCheck } from "react-icons/fa";
 
 const Card: React.FC<cardProps> = ({
   product,
-  coins,
+  points,
   setRedeem,
   redeemed,
   bagged,
@@ -22,6 +22,7 @@ const Card: React.FC<cardProps> = ({
   const ref = useRef<HTMLButtonElement>(null);
   const style: CSSInterpolation = css({
     width: "100%",
+    height: "100%",
     "&>*": {
       width: "100%",
     },
@@ -87,7 +88,7 @@ const Card: React.FC<cardProps> = ({
         </header>
         <img src={"/images/products/Nintendo3DS-x1.png"} />
         <Separator />
-        <Typography color={colors.fontSecondary}>{product.category}</Typography>
+        <Typography color="fontSecondary">{product.category}</Typography>
         <Typography>{product.name}</Typography>
       </Button>
       <Curtain
@@ -96,7 +97,7 @@ const Card: React.FC<cardProps> = ({
         product={product}
         setRedeem={setRedeem}
         setSelected={setSelected}
-        availableCoins={coins}
+        availableCoins={points}
       />
     </article>
   );

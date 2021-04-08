@@ -1,12 +1,13 @@
 import { css, CSSObject } from "@emotion/css";
 import React from "react";
+import { createBrotliDecompress } from "zlib";
 import { colors } from "../constants/colors";
 
 type align = "start" | "left" | "right" | "center";
 
 interface TypographyProps {
-  variant?: "h1" | "h2" | "h3" | "p" | "small";
-  color?: string;
+  variant?: "h1" | "h2" | "h3" | "h4" | "p" | "small";
+  color?: keyof typeof colors;
   bold?: boolean;
   align?: align;
   cssProps?: CSSObject;
@@ -14,7 +15,7 @@ interface TypographyProps {
 
 const Typography: React.FC<TypographyProps> = ({
   variant = "p",
-  color = colors.fontPrimary,
+  color,
   bold,
   align,
   cssProps,
@@ -22,15 +23,19 @@ const Typography: React.FC<TypographyProps> = ({
 }) => {
   const styleCase = {
     h1: {
-      fontSize: "6.4rem",
+      fontSize: "6rem",
       fontWeight: 900,
     },
     h2: {
-      fontSize: "2.4rem",
+      fontSize: "4.4rem",
       fontWeight: bold ? 900 : 400,
     },
     h3: {
-      fontSize: "2.1rem",
+      fontSize: "3.1rem",
+      fontWeight: bold ? 900 : 400,
+    },
+    h4: {
+      fontSize: "2.2rem",
       fontWeight: bold ? 900 : 400,
     },
     p: {
@@ -45,7 +50,7 @@ const Typography: React.FC<TypographyProps> = ({
 
   const style = css({
     fontFamily: "'Source Sans Pro', sans-serif",
-    color: color,
+    color: color ? colors[color] : colors.fontPrimary,
     textAlign: align ? align : "start",
     ...styleCase[variant],
     ...cssProps,
@@ -55,6 +60,7 @@ const Typography: React.FC<TypographyProps> = ({
     h1: <h1 className={style}>{children}</h1>,
     h2: <h2 className={style}>{children}</h2>,
     h3: <h3 className={style}>{children}</h3>,
+    h4: <h4 className={style}>{children}</h4>,
     p: <p className={style}>{children}</p>,
     small: <small className={style}>{children}</small>,
   };
@@ -63,6 +69,5 @@ const Typography: React.FC<TypographyProps> = ({
 };
 Typography.defaultProps = {
   variant: "p",
-  color: colors.fontPrimary,
 };
 export default Typography;
