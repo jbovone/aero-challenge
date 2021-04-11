@@ -18,11 +18,13 @@ import { useSorted } from "../hooks/useSorted";
 import Head from "next/head";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
+import Error from "next/error";
 
 interface redeem {
   products: Product[];
   user: user;
   cart: Product[];
+  isAuth: boolean;
   appDispatch: Dispatch<action>;
 }
 
@@ -54,8 +56,7 @@ const ControlsContainer = styled.section({
 const NamedButtonPannel = styled.div({
   ...flex("flex-start"),
   flex: 1,
-  minHeight: "20vh",
-
+  minHeight: 120,
   ...media(1240, {
     flex: "unset",
     width: "100%",
@@ -86,15 +87,15 @@ const ProductsViewer = styled.section({
   position: "relative",
   justifyContent: "center",
   minHeight: "50vh",
-  gridTemplateColumns: "repeat(4, 22%)",
-  ...media(1240, {
+  gridTemplateColumns: "repeat(4, 25%)",
+  ...media(1440, {
     gridTemplateColumns: "repeat(3, 30%)",
   }),
   ...media(810, {
     gridTemplateColumns: "repeat(2, 47%)",
   }),
   ...media(520, {
-    gridTemplateColumns: "repeat(1, 97%)",
+    gridTemplateColumns: "repeat(1, minMax(270px, 80%))",
   }),
 });
 
@@ -123,7 +124,7 @@ const Footer = styled.section({
 
 const ViewStyles: CSSObject = {
   "&>section": {
-    width: "80%",
+    width: "75%",
     margin: "auto",
   },
   ...media(1240, {
@@ -133,12 +134,20 @@ const ViewStyles: CSSObject = {
   }),
 };
 
-const Reedem: React.FC<redeem> = ({ products, user, cart, appDispatch }) => {
+const Reedem: React.FC<redeem> = ({
+  products,
+  user,
+  cart,
+  appDispatch,
+  isAuth,
+}) => {
   const { redeemHistory, points } = user;
   const [itemsPerPage, setItemsPerPage] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
   const { activeOrder, assorted, setOrderBy, orderTypes } = useSorted(products);
   const pagination = usePagination(itemsPerPage, assorted);
+
+  if (!isAuth) return <Error statusCode={404} />;
 
   const ProductCounter: React.FC = () => {
     const ProductCounterContainer = styled.div({
@@ -150,7 +159,7 @@ const Reedem: React.FC<redeem> = ({ products, user, cart, appDispatch }) => {
     });
     return (
       <ProductCounterContainer>
-        <Typography variant="h3">
+        <Typography variant="h4">
           {pagination[page - 1].length * page} of {products.length} products
         </Typography>
       </ProductCounterContainer>
@@ -192,7 +201,7 @@ const Reedem: React.FC<redeem> = ({ products, user, cart, appDispatch }) => {
             isFirstPage={page === 1}
           />
         </ControlsContainer>
-        <Separator mb={40} />
+        <Separator mb={60} />
         <ProductsViewer>
           {pagination[page - 1].map((product, i) => (
             <motion.div

@@ -1,18 +1,18 @@
 import { css } from "@emotion/css";
-import React, { FormEvent } from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import { colors } from "../constants/colors";
+import Button from "./normalizers/Button";
 import Typography from "./Typography";
 
 interface MainButtonProps {
   title?: string;
   variant?: "outlined" | "filled";
   color?: keyof typeof colors;
-  onClick?: (
-    e: React.SyntheticEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>
-  ) => void;
 }
 
-const MainButton: React.FC<MainButtonProps> = ({
+const MainButton: React.FC<
+  MainButtonProps & ButtonHTMLAttributes<HTMLButtonElement>
+> = ({
   title,
   variant = "filled",
   color = "fontPrimary",
@@ -31,15 +31,13 @@ const MainButton: React.FC<MainButtonProps> = ({
     },
   };
   const style = css({
-    background: "none",
-    border: "none",
     padding: "1.2em 2.2em",
     borderRadius: 6,
     cursor: "pointer",
     ...variants[variant],
   });
   return (
-    <button className={style} onClick={onClick}>
+    <Button className={style} onClick={onClick}>
       <Typography
         variant="h4"
         color={variant === "filled" ? "fontInverse" : color}
@@ -48,7 +46,7 @@ const MainButton: React.FC<MainButtonProps> = ({
         {title}
         {children}
       </Typography>
-    </button>
+    </Button>
   );
 };
 export default MainButton;

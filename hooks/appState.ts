@@ -65,6 +65,11 @@ function reducer(state: appState, action: action) {
       return {
         ...state,
         cart: [],
+        user: {
+          ...state.user,
+          points: state.user.points - action.payload,
+          redeemHistory: [...state.user.redeemHistory, ...state.cart],
+        },
         dialog: {
           id: state?.dialog === null ? 1 : state.dialog.id + 1,
           dialogType: dialogDispatch.purchaseSuccess,
@@ -90,6 +95,34 @@ function reducer(state: appState, action: action) {
           cb: () => {
             router.push("/redeem");
           },
+        },
+      };
+    case "logOut":
+      return {
+        ...state,
+        dialog: {
+          id: state?.dialog === null ? 1 : state.dialog.id + 1,
+          dialogType: dialogDispatch.logOut,
+          title: action.payload.title,
+          timmer: 2000,
+          cb: () => {
+            action.payload.callback();
+            router.push("/");
+          },
+        },
+      };
+    case "logOutStage2":
+      return {
+        ...state,
+        user: { points: 0, name: "", redeemHistory: [] },
+      };
+
+    case "coinsClaimedSucesss":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          points: state.user.points - action.payload,
         },
       };
     default:

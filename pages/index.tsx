@@ -4,7 +4,7 @@ import MainButton from "../components/MainButton";
 import { useRouter } from "next/router";
 import Typography from "../components/Typography";
 import { flex } from "../utils/flex";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch } from "react";
 import Form from "../components/Form";
 
 interface homeProps {

@@ -3,4 +3,5 @@ export const dialogDispatch = {
   purchaseSuccess: "PURCHASE_SUCCESS",
   welcomeSuccess: "WELCOME_SUCCESS",
   emptyBag: "EMPTY_BAG",
+  logOut: "LOG_OUT",
 } as const;

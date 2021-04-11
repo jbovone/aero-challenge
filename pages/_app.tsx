@@ -14,7 +14,9 @@ const MyApp: AppComponent = ({ Component, pageProps }) => {
       <Navigation
         coins={user ? user.points : 0}
         bagLength={cart.length}
-        logIn={Boolean(user.name)}
+        isAuth={Boolean(user.name)}
+        appDispatch={dispatch}
+        user={user}
       />
       {dialog && (
         <Dialog
@@ -30,7 +32,7 @@ const MyApp: AppComponent = ({ Component, pageProps }) => {
         appDispatch={dispatch}
         cart={cart}
         user={user}
-        logIn={false}
+        isAuth={Boolean(user.name)}
       />
       <Footer />
     </>

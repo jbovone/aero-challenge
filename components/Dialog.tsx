@@ -28,7 +28,7 @@ const PurchaceSuccess: React.FC<dialogTypeProps> = ({ children }) => {
   return (
     <>
       {children}
-      <Typography variant="h3">Congratulations for your Purchase!</Typography>
+      <Typography variant="h4">Congratulations for your Purchase!</Typography>
       <Typography variant="small" color="decorator" bold>
         We will redirect you to reedem.
       </Typography>
@@ -59,6 +59,15 @@ const WelcomeSuccess: React.FC<dialogTypeProps> = ({ title, children }) => {
   );
 };
 
+const LogOut: React.FC<dialogTypeProps> = ({ title, children }) => {
+  return (
+    <>
+      {children}
+      <Typography variant="h4">{title} Has logued out.</Typography>
+    </>
+  );
+};
+
 const dialogs: Readonly<Record<
   dialogDispatchEnum,
   React.FC<dialogTypeProps>
@@ -67,6 +76,7 @@ const dialogs: Readonly<Record<
   EMPTY_BAG: EmptyBag,
   WELCOME_SUCCESS: WelcomeSuccess,
   PURCHASE_SUCCESS: PurchaceSuccess,
+  LOG_OUT: LogOut,
 };
 
 const Dialog: React.FC<DialogProps> = ({

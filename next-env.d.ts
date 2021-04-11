@@ -15,9 +15,12 @@ interface Product {
 type actionTypes =
   | "addToCart"
   | "removeFromCart"
-  | "setUser"
   | "reedemSuccess"
-  | "bagEmpty";
+  | "bagEmpty"
+  | "setUser"
+  | "logOut"
+  | "logOutStage2"
+  | "coinsClaimedSucesss";
 
 interface action {
   type: actionTypes;
@@ -42,7 +45,8 @@ type dialogDispatchEnum =
   | "ADD_TO_BAG"
   | "PURCHASE_SUCCESS"
   | "WELCOME_SUCCESS"
-  | "EMPTY_BAG";
+  | "EMPTY_BAG"
+  | "LOG_OUT";
 
 interface DialogProps {
   title?: string;

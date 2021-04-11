@@ -1,6 +1,5 @@
 import { css, CSSObject } from "@emotion/css";
 import React from "react";
-import { createBrotliDecompress } from "zlib";
 import { colors } from "../constants/colors";
 
 type align = "start" | "left" | "right" | "center";

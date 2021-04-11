@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import React from "react";
+import React, { useEffect, useState, useRef, Dispatch } from "react";
 import Link from "next/link";
 import Aerolab from "./svg/Aerolab";
 import { flex } from "../utils/flex";
@@ -7,17 +7,23 @@ import Typography from "./Typography";
 import Coin from "./svg/Coin";
 import Bag from "./svg/Bag";
 import styled from "@emotion/styled";
-import AeroNavLink from "./AeroNavLink";
 import { keyframes } from "@emotion/react";
-import { Input } from "./FancyInputs";
 import MainButton from "./MainButton";
 import router from "next/router";
 import Gift from "../components/svg/Gift";
+import { FaUser } from "react-icons/fa";
+import { colors } from "../constants/colors";
+import { boxShadow } from "../constants/boxShadow";
+import { media } from "../utils/media";
+import DropdownMenu from "./DropdownMenu";
+import Button from "./normalizers/Button";
 
 interface NavigationProps {
   coins: number;
   bagLength: number;
-  logIn: boolean;
+  isAuth: boolean;
+  appDispatch: Dispatch<action>;
+  user: user;
 }
 
 const style = css({
@@ -33,8 +39,8 @@ const style = css({
     ".coins": {
       p: {
         position: "absolute",
-        top: 7,
-        left: "13%",
+        width: "100%",
+        bottom: 17,
       },
     },
     ".aside-item": {
@@ -42,17 +48,34 @@ const style = css({
       cursor: "pointer",
       ...flex("center", "center", "column"),
       margin: 10,
-
-      "&>*": {
-        margin: 0,
-      },
       svg: {
         width: "40px",
         height: "40px",
-
         zIndex: -1,
       },
     },
+    "button:Last-child ": {
+      svg: {
+        transform: "scale(.5) translateY(2px)",
+        fill: colors.primary,
+      },
+
+      "&::after": {
+        boxShadow: boxShadow,
+        content: "''",
+        height: 33,
+        width: 33,
+        borderRadius: "50%",
+        position: "absolute",
+        zIndex: -2,
+        bottom: 18,
+      },
+    },
+    ...media(500, {
+      "div:Last-child svg": {
+        transform: "scale(.5) translateY(-2px)",
+      },
+    }),
   },
 });
 
@@ -74,14 +97,21 @@ const Badge = styled.article({
   animation: `${pulsate} 3.5s ease infinite`,
 });
 
-const Navigation: React.FC<NavigationProps> = ({ coins, bagLength, logIn }) => {
-  console.log(logIn, "LOGIN");
+const Navigation: React.FC<NavigationProps> = ({
+  coins,
+  bagLength,
+  isAuth,
+  appDispatch,
+  user,
+}) => {
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
   return (
     <nav className={style}>
       <a href="https://aerolab.co/">
         <Aerolab />
       </a>
-      {logIn ? (
+      {isAuth ? (
         <aside>
           <Link href="/redeem">
             <div className="aside-item">
@@ -94,7 +124,7 @@ const Navigation: React.FC<NavigationProps> = ({ coins, bagLength, logIn }) => {
           <Link href="/coins">
             <div className="aside-item coins">
               <Coin />
-              <Typography bold variant="p">
+              <Typography bold variant="p" align="center">
                 {coins}
               </Typography>
               <Typography bold variant="small">
@@ -117,6 +147,23 @@ const Navigation: React.FC<NavigationProps> = ({ coins, bagLength, logIn }) => {
               </Typography>
             </div>
           </Link>
+          <Button
+            className="aside-item"
+            onClick={() => setShowUserMenu((show) => !show)}
+          >
+            <FaUser />
+            <Typography bold variant="small">
+              Account
+            </Typography>
+            {showUserMenu && (
+              <DropdownMenu
+                show={showUserMenu}
+                setShow={setShowUserMenu}
+                appDispatch={appDispatch}
+                user={user}
+              />
+            )}
+          </Button>
         </aside>
       ) : (
         <MainButton

@@ -7,7 +7,6 @@ import Typography from "./Typography";
 import { colors } from "../constants/colors";
 import Separator from "./Separator";
 import { media } from "../utils/media";
-import { CodeFixAction } from "typescript";
 
 const style = css({
   ...flex("space-between", "stretch"),

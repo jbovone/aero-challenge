@@ -10,11 +10,6 @@ import { IoMdCloseCircle } from "react-icons/io";
 import router from "next/router";
 import { colors } from "../constants/colors";
 
-type userAuth = {
-  password: string;
-  usernmane: string;
-};
-
 const style = css({
   ...flex("center", "center", "column"),
   position: "fixed",
@@ -33,7 +28,6 @@ const style = css({
   right: 0,
   top: 0,
   width: "80%",
-
   margin: "auto",
   padding: 20,
   minWidth: 310,
@@ -69,7 +63,6 @@ const FormikWrapper: React.FC<{
     initialValues={initialValues}
     validationSchema={Schema}
     onSubmit={(data: any) => {
-      console.log(data, "DATA");
       onSubmit(data);
     }}
   >
@@ -121,7 +114,7 @@ const SignUp: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
   return (
     <FormikWrapper
       Schema={Schema}
-      initialValues={{ email: "", password: "", repeatPassword: "" }}
+      initialValues={{ username: "", password: "", repeatPassword: "" }}
       onSubmit={onSubmit}
     >
       <FormHeader />
@@ -180,8 +173,3 @@ const Form: React.FC<formHandlerProps> = ({ appDispatch, form }) => {
   return Component ? <Component onSubmit={Forms[form]?.onSubmit} /> : <></>;
 };
 export default Form;
-
-/* 
-   opacity: show ? 1 : 0,
-  zIndex: show ? 1000 : -1000,
- */

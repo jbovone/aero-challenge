@@ -10,22 +10,9 @@ import { colors } from "../constants/colors";
 import { flex } from "../utils/flex";
 import { media } from "../utils/media";
 import Separator from "../components/Separator";
-import axios from "axios";
-import { useRouter } from "next/router";
-
-const EmptyBag = styled.section((props: { boxShadow?: string }) => ({
-  flex: 1,
-  maxWidth: 800,
-  background: "white",
-  ...flex("space-evenly", "center", "column"),
-  "box-shadow": props.boxShadow,
-  margin: "10px 15px",
-  padding: "8em 1em",
-  "h2, p": {
-    textAlign: "center",
-    marginBottom: "1em",
-  },
-}));
+import Error from "next/error";
+import useFetch from "../hooks/useFetch";
+import Box from "../components/Box";
 
 const MediaViewer = styled.section((props: { boxShadow?: string }) => ({
   flex: 1,
@@ -51,7 +38,6 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
   margin: "1em",
   marginBottom: "20",
   padding: "1.4em",
-  paddingBottom: 40,
   "&>*": {
     margin: "11px 13px",
   },
@@ -63,9 +49,11 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
     ...flex("space-between"),
   },
   button: {
-    position: "absolute",
     alignSelf: "center",
-    bottom: 5,
+  },
+  footer: {
+    ...flex("space-between", "center", "column"),
+    minHeight: 85,
   },
   "@media (max-width: 430px)": {
     minWidth: "unset",
@@ -76,24 +64,20 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
 interface cartProps {
   cart: Product[];
   user: user;
+  isAuth: boolean;
   appDispatch: Dispatch<action>;
 }
 
-const Cart: React.FC<cartProps> = ({ cart, user, appDispatch }) => {
+const Cart: React.FC<cartProps> = ({ cart, user, appDispatch, isAuth }) => {
   const { points } = user;
   const total = cart.reduce((acc, { cost }) => acc + cost, 0);
-  const [redeem, setRedeem] = useState({
-    loading: false,
-    error: false,
-    success: false,
-  });
+  const [{ loading, error, success }, handleRedeem] = useFetch();
+
   const style: CSSObject = {
     ...flex("center", "center"),
     minHeight: "80vh",
     flexWrap: "wrap",
-    background: redeem.success
-      ? `url('/images/successBackground.svg')`
-      : "unset",
+    background: success ? `url('/images/successBackground.svg')` : "unset",
     ...media(840, {
       "&>*": {
         width: "100%",
@@ -102,34 +86,19 @@ const Cart: React.FC<cartProps> = ({ cart, user, appDispatch }) => {
   };
 
   useEffect(() => {
-    if (redeem.loading) {
-      axios
-        .post("api/redeems", {
-          data: cart.map((prize) => prize.id),
-        })
-        .then(() => {
-          setRedeem(() => ({
-            loading: false,
-            error: false,
-            success: true,
-          }));
-          appDispatch({ type: "reedemSuccess" });
-        })
-        .catch(() => {
-          setRedeem(() => ({
-            loading: false,
-            success: false,
-            error: true,
-          }));
-        });
+    if (cart.length === 0 && success === false && error === false) {
+      appDispatch({
+        type: "bagEmpty",
+      });
     }
-  }, [redeem.loading]);
+  }, []);
 
+  if (!isAuth) return <Error statusCode={404} />;
   return (
     <View cssProps={style}>
       {cart.length === 0 ? (
-        <EmptyBag boxShadow={boxShadow}>
-          {redeem.success && (
+        <Box>
+          {success && (
             <img
               className="emojidex-emoji"
               src="https://cdn.emojidex.com/emoji/seal/tada.png"
@@ -139,14 +108,14 @@ const Cart: React.FC<cartProps> = ({ cart, user, appDispatch }) => {
             />
           )}
           <Typography variant="h2" bold>
-            {redeem.success
+            {success
               ? "Contragutation for your purchase!"
               : "Oh! ..seems like the cart is empty"}
           </Typography>
           <Typography variant="small" bold>
             Go back to shopping for some awesome Prizes!
           </Typography>
-        </EmptyBag>
+        </Box>
       ) : (
         <MediaViewer boxShadow={boxShadow}>
           <Typography variant="h2" bold>
@@ -187,19 +156,24 @@ const Cart: React.FC<cartProps> = ({ cart, user, appDispatch }) => {
               </Typography>
             </li>
           </ul>
-          <div />
-          <PillButton
-            title={points - total < 0 ? "Not Enough Points" : "Redeem Prizes"}
-            onClick={() => {
-              setRedeem((state) => ({ ...state, loading: true }));
-            }}
-            disabled={total <= 0 || points - total < 0}
-          />
-          {redeem.error && (
-            <Typography bold variant="small" color="red">
-              Service Unavailable at the moment.
-            </Typography>
-          )}
+          <footer>
+            <PillButton
+              title={points - total < 0 ? "Not Enough Points" : "Redeem Prizes"}
+              onClick={() =>
+                handleRedeem(
+                  "api/redeems",
+                  cart.map((prize) => prize.id),
+                  () => appDispatch({ type: "reedemSuccess", payload: total })
+                )
+              }
+              disabled={total <= 0 || points - total < 0}
+            />
+            {error && (
+              <Typography bold variant="small" color="red">
+                Service Unavailable at the moment.
+              </Typography>
+            )}
+          </footer>
         </TotalViewer>
       )}
     </View>

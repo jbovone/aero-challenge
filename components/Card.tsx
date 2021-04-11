@@ -1,15 +1,14 @@
 import { css, CSSInterpolation, cx } from "@emotion/css";
 import React, { useState, useRef, useEffect } from "react";
 import Typography from "./Typography";
-import { colors } from "../constants/colors";
 import Bag from "./svg/Bag";
 import { flex } from "../utils/flex";
-import Coin from "./svg/Coin";
 import Curtain from "./Curtain";
 import Separator from "./Separator";
 import Button from "./normalizers/Button";
 import { boxShadow } from "../constants/boxShadow";
 import { FaCheck } from "react-icons/fa";
+import { media } from "../utils/media";
 
 const Card: React.FC<cardProps> = ({
   product,
@@ -53,6 +52,9 @@ const Card: React.FC<cardProps> = ({
         },
       },
     },
+    ...media(520, {
+      transform: selected ? "scale(1.1)" : "none",
+    }),
     img: {
       width: "95%",
     },
@@ -86,7 +88,7 @@ const Card: React.FC<cardProps> = ({
             <FaCheck fill="rgb(69, 221, 69, 0.7)" />
           </div>
         </header>
-        <img src={"/images/products/Nintendo3DS-x1.png"} />
+        <img src={product.img.url} />
         <Separator />
         <Typography color="fontSecondary">{product.category}</Typography>
         <Typography>{product.name}</Typography>

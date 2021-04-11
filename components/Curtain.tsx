@@ -1,5 +1,6 @@
-import { css } from "@emotion/css";
+import { css, CSSObject } from "@emotion/css";
 import React, { Dispatch } from "react";
+import { FaChessBoard } from "react-icons/fa";
 import { colors } from "../constants/colors";
 import { flex } from "../utils/flex";
 import PillButton from "./PillButton";
@@ -18,6 +19,13 @@ const Curtain = React.forwardRef<
   curtainProps & Omit<cardProps, "redeemed" | "bagged" | "points">
 >(({ show, product, setRedeem, setSelected, availableCoins }, ref) => {
   const isReedemeable = availableCoins - product.cost > 0;
+  const boxStyle: CSSObject = {
+    background: "rgb(255,255,255,.82)",
+    borderRadius: 10,
+    padding: 10,
+    border: `1px solid ${colors.fontSecondary}`,
+    width: "80%",
+  };
   const style = css({
     position: "absolute",
     bottom: 0,
@@ -28,30 +36,28 @@ const Curtain = React.forwardRef<
     padding: show ? 20 : 0,
     ...flex("space-between", "center", "column"),
     header: {
-      background: "white",
-      borderRadius: 10,
-      padding: 10,
-      width: "90%",
-      border: `1px solid ${colors.fontSecondary}`,
+      ...boxStyle,
+      ...flex("center", "center", "row"),
+    },
+    ul: {
+      ...boxStyle,
       ...flex("flex-start", "center", "column"),
-      ul: {
+      minWidth: 170,
+      position: "relative",
+      li: {
+        "span small": {
+          margin: 0,
+        },
+        span: {
+          ...flex("center", "center"),
+        },
+        ...flex("space-between"),
+        padding: 3,
         width: "100%",
-        position: "relative",
-        li: {
-          "span small": {
-            margin: 0,
-          },
-          span: {
-            ...flex("center", "center"),
-          },
-          ...flex("space-between"),
-          padding: 3,
-          width: "100%",
-        },
-        svg: {
-          height: 15,
-          width: 15,
-        },
+      },
+      svg: {
+        height: 15,
+        width: 15,
       },
     },
   });
@@ -66,7 +72,9 @@ const Curtain = React.forwardRef<
       <li>
         <span>
           <Coin />
-          <Typography variant="small">{listKey}</Typography>
+          <Typography variant="small" bold>
+            {listKey}
+          </Typography>
         </span>
         <Typography variant="small" bold>
           {listValue}
@@ -80,24 +88,25 @@ const Curtain = React.forwardRef<
       {show && (
         <>
           <header>
-            <Typography variant="p" color="fontSecondary">
-              {product.name}:
+            <Typography variant="p" color="fontSecondary" align="center">
+              {product.name}
             </Typography>
-            <ul>
-              <ListItem listKey="Your coins:" listValue={availableCoins} />
-              <ListItem listKey="Will cost:" listValue={product.cost} />
-              {isReedemeable ? (
-                <ListItem
-                  listKey="Coins left:"
-                  listValue={availableCoins - product.cost}
-                />
-              ) : (
-                <Typography variant="small">
-                  -Not enough points to claim!
-                </Typography>
-              )}
-            </ul>
           </header>
+
+          <ul>
+            <ListItem listKey="Your coins:" listValue={availableCoins} />
+            <ListItem listKey="Will cost:" listValue={product.cost} />
+            {isReedemeable ? (
+              <ListItem
+                listKey="Coins left:"
+                listValue={availableCoins - product.cost}
+              />
+            ) : (
+              <Typography variant="small">
+                -Not enough points to claim!
+              </Typography>
+            )}
+          </ul>
           <PillButton
             ref={ref}
             onClick={(e) => {
