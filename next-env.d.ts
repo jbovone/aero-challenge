@@ -10,6 +10,7 @@ interface Product {
   name: string;
   cost: number;
   category: string;
+  createdAt: number;
 }
 
 type actionTypes =
@@ -35,7 +36,6 @@ interface user {
 
 interface cardProps {
   product: Product;
-  redeemed: boolean;
   bagged: boolean;
   points: number;
   setRedeem: Dispatch<action>;
@@ -46,7 +46,8 @@ type dialogDispatchEnum =
   | "PURCHASE_SUCCESS"
   | "WELCOME_SUCCESS"
   | "EMPTY_BAG"
-  | "LOG_OUT";
+  | "LOG_OUT"
+  | "COINS_ADDED";
 
 interface DialogProps {
   title?: string;

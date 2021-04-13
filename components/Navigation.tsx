@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import React, { useEffect, useState, useRef, Dispatch } from "react";
+import React, { useState, Dispatch } from "react";
 import Link from "next/link";
 import Aerolab from "./svg/Aerolab";
 import { flex } from "../utils/flex";
@@ -9,7 +9,7 @@ import Bag from "./svg/Bag";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 import MainButton from "./MainButton";
-import router from "next/router";
+import { useRouter } from "next/router";
 import Gift from "../components/svg/Gift";
 import { FaUser } from "react-icons/fa";
 import { colors } from "../constants/colors";
@@ -105,10 +105,11 @@ const Navigation: React.FC<NavigationProps> = ({
   user,
 }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const { push, pathname } = useRouter();
 
   return (
     <nav className={style}>
-      <a href="https://aerolab.co/">
+      <a href="/">
         <Aerolab />
       </a>
       {isAuth ? (
@@ -153,7 +154,7 @@ const Navigation: React.FC<NavigationProps> = ({
           >
             <FaUser />
             <Typography bold variant="small">
-              Account
+              {user.name}
             </Typography>
             {showUserMenu && (
               <DropdownMenu
@@ -165,11 +166,10 @@ const Navigation: React.FC<NavigationProps> = ({
             )}
           </Button>
         </aside>
+      ) : pathname === "/" ? (
+        <MainButton title="Sign In" onClick={() => push("?form=sign-in")} />
       ) : (
-        <MainButton
-          title="Sign In"
-          onClick={() => router.push("?form=sign-in")}
-        />
+        <> </>
       )}
     </nav>
   );

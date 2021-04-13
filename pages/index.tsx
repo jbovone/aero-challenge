@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Typography from "../components/Typography";
 import { flex } from "../utils/flex";
 import { Dispatch } from "react";
-import Form from "../components/Form";
+import { SignIn, SignUp } from "../components/Form";
 
 interface homeProps {
   logIn: boolean;
@@ -55,11 +55,12 @@ const Home: React.FC<homeProps> = ({ logIn, appDispatch }) => {
         />
       </div>
       <img src="/images/backHome.png" alt="" />
-      <Form
-        show={Boolean(query?.form === "sign-in" || query.form === "sign-up")}
-        form={query?.form as forms}
-        appDispatch={appDispatch}
-      />
+      {Boolean(query?.form === "sign-in") && (
+        <SignIn appDispatch={appDispatch} />
+      )}
+      {Boolean(query?.form === "sign-up") && (
+        <SignUp appDispatch={appDispatch} />
+      )}
     </main>
   );
 };

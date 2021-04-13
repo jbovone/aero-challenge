@@ -1,7 +1,6 @@
 import { AppComponent } from "next/dist/next-server/lib/router/router";
 import "../styles/globals.css";
 import Navigation from "../components/Navigation";
-import { useState, useEffect } from "react";
 import Dialog from "../components/Dialog";
 import Footer from "../components/Footer";
 import useAppState from "../hooks/appState";

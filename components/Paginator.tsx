@@ -1,5 +1,7 @@
-import { css, CSSObject } from "@emotion/react";
+import { css, CSSObject } from "@emotion/css";
 import React, { SetStateAction, SyntheticEvent } from "react";
+import { flex } from "../utils/flex";
+import { media } from "../utils/media";
 import { Input, Select } from "./FancyInputs";
 import Button from "./normalizers/Button";
 import PaginationIcon from "./svg/PaginationIcon";
@@ -52,9 +54,21 @@ export const Paginator: React.FC<PaginatorProps> = ({
     maxWidth: 45,
     textAlign: "center",
   };
+  const style = css({
+    ...flex("space-evenly", "center"),
+    padding: 20,
+    margin: 10,
+    "&>div": {
+      ...flex(),
+      margin: "20px 10px",
+    },
+    ...media(760, {
+      ...flex("space-evenly", "center", "column"),
+    }),
+  });
 
   return (
-    <>
+    <div className={style}>
       <div>
         <NextBtn
           setPage={setPage}
@@ -90,6 +104,6 @@ export const Paginator: React.FC<PaginatorProps> = ({
         />
         <Typography>Products per Page</Typography>
       </div>
-    </>
+    </div>
   );
 };

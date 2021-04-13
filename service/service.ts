@@ -26,5 +26,6 @@ export function toMapProduct(raw: any): Product[] {
   return raw.map(({ _id, ...product }: { _id: string }) => ({
     ...product,
     id: _id,
+    createdAt: Date.now(),
   }));
 }

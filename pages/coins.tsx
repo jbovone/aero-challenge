@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import View from "../components/normalizers/View";
 import Typography from "../components/Typography";
 import PromoCard from "../components/PromoCard";
@@ -7,15 +7,18 @@ import { CSSObject } from "@emotion/css";
 import { media } from "../utils/media";
 import Box from "../components/Box";
 import Button from "../components/normalizers/Button";
+import Error from "next/error";
 
 interface coinsProps {
   user: user;
+  appDispatch: Dispatch<action>;
+  isAuth: boolean;
 }
 const back01 = "promoCardBackground.svg";
 const back02 = "promoCardBackground2.svg";
 const back03 = "promoCardBackground3.svg";
 
-const Coins: React.FC<coinsProps> = ({ user }) => {
+const Coins: React.FC<coinsProps> = ({ user, appDispatch, isAuth }) => {
   const viewCSS: CSSObject = {
     ...flex("flex-start", "center", "column"),
     section: {
@@ -30,6 +33,8 @@ const Coins: React.FC<coinsProps> = ({ user }) => {
     display: "grid",
     img: { width: "90%" },
   };
+
+  if (!isAuth) return <Error statusCode={404} />;
   return (
     <View cssProps={viewCSS}>
       <Typography variant="h1">Your Coins</Typography>
@@ -38,9 +43,24 @@ const Coins: React.FC<coinsProps> = ({ user }) => {
         more promo codes!!
       </Typography>
       <section>
-        <PromoCard background={back01} points={1000} />
-        <PromoCard background={back02} points={5000} />
-        <PromoCard background={back03} points={7500} />
+        <PromoCard
+          background={back01}
+          points={1000}
+          initialValue="1FG2"
+          appDispatch={appDispatch}
+        />
+        <PromoCard
+          background={back02}
+          points={5000}
+          initialValue="ARLM"
+          appDispatch={appDispatch}
+        />
+        <PromoCard
+          background={back03}
+          points={7500}
+          initialValue="3DFG"
+          appDispatch={appDispatch}
+        />
       </section>
       <Typography variant="h1">Redeem History</Typography>
       <Typography variant="h4">

@@ -1,6 +1,7 @@
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import React, { ButtonHTMLAttributes } from "react";
 import { colors } from "../constants/colors";
+import { flex } from "../utils/flex";
 import Button from "./normalizers/Button";
 import Typography from "./Typography";
 
@@ -18,6 +19,7 @@ const MainButton: React.FC<
   color = "fontPrimary",
   onClick,
   children,
+  ...props
 }) => {
   const variants = {
     outlined: {
@@ -34,18 +36,19 @@ const MainButton: React.FC<
     padding: "1.2em 2.2em",
     borderRadius: 6,
     cursor: "pointer",
+    ...flex("space-between"),
     ...variants[variant],
   });
   return (
-    <Button className={style} onClick={onClick}>
+    <Button className={cx(style, props.className)} onClick={onClick}>
       <Typography
         variant="h4"
         color={variant === "filled" ? "fontInverse" : color}
         cssProps={{ margin: 0 }} //any normalization criteria shoudn't apply here
       >
         {title}
-        {children}
       </Typography>
+      {children}
     </Button>
   );
 };

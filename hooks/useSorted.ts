@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 
 export const useSorted = (products: Product[]) => {
   const sortedProducts = useRef<Readonly<Record<orderBy, Product[]>>>({
-    "Most Recent": ((a) => [
-      ...a.sort((a, b) => (a.id > b.id ? 1 : a.id < b.id ? -1 : 0)),
-    ])([...products]),
+    "Most Recent": ((a) => [...a.sort((a, b) => a.createdAt - b.createdAt)])([
+      ...products,
+    ]),
     "Lowest Price": ((a) => [...a.sort((a, b) => a.cost - b.cost)])([
       ...products,
     ]),

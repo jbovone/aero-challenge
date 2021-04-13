@@ -67,6 +67,14 @@ const LogOut: React.FC<dialogTypeProps> = ({ title, children }) => {
     </>
   );
 };
+const CoinsAdded: React.FC<dialogTypeProps> = ({ title, children }) => {
+  return (
+    <>
+      {children}
+      <Typography variant="h4">{title} Coins Added Successfully!</Typography>
+    </>
+  );
+};
 
 const dialogs: Readonly<Record<
   dialogDispatchEnum,
@@ -77,6 +85,7 @@ const dialogs: Readonly<Record<
   WELCOME_SUCCESS: WelcomeSuccess,
   PURCHASE_SUCCESS: PurchaceSuccess,
   LOG_OUT: LogOut,
+  COINS_ADDED: CoinsAdded,
 };
 
 const Dialog: React.FC<DialogProps> = ({

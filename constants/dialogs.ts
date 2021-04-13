@@ -4,4 +4,5 @@ export const dialogDispatch = {
   welcomeSuccess: "WELCOME_SUCCESS",
   emptyBag: "EMPTY_BAG",
   logOut: "LOG_OUT",
+  coinsAdded: "COINS_ADDED",
 } as const;

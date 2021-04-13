@@ -9,15 +9,12 @@ import Button from "./normalizers/Button";
 import { boxShadow } from "../constants/boxShadow";
 import { FaCheck } from "react-icons/fa";
 import { media } from "../utils/media";
+import ClipLoader from "react-spinners/ClipLoader";
+import { colors } from "../constants/colors";
 
-const Card: React.FC<cardProps> = ({
-  product,
-  points,
-  setRedeem,
-  redeemed,
-  bagged,
-}) => {
+const Card: React.FC<cardProps> = ({ product, points, setRedeem, bagged }) => {
   const [selected, setSelected] = useState(false);
+  const [loadedImg, setLoadedImg] = useState<null | string>(null);
   const ref = useRef<HTMLButtonElement>(null);
   const style: CSSInterpolation = css({
     width: "100%",
@@ -34,6 +31,10 @@ const Card: React.FC<cardProps> = ({
     transition: ".3s",
     transform: selected ? "scale(1.2)" : "none",
     zIndex: selected ? 100 : 99,
+    section: {
+      height: 160,
+      ...flex(),
+    },
     header: {
       ...flex("space-between", "center", "row-reverse"),
       div: {
@@ -60,27 +61,30 @@ const Card: React.FC<cardProps> = ({
     },
   });
 
-  const redeemedStyle: CSSInterpolation = css({
-    display: "none",
-  });
-  const baggedStyle: CSSInterpolation = css({});
-  const disabled = redeemed || bagged;
-
   useEffect(() => {
     if (ref.current) {
       ref.current.focus();
+      ref.current.scrollIntoView(false);
     }
   }, [selected]);
+
+  useEffect(() => {
+    fetch(product.img.url)
+      .then((res) => res.blob())
+      .then((img) => URL.createObjectURL(img))
+      .then((src) => setLoadedImg(src))
+      .catch(() => setLoadedImg("error"));
+  }, []);
+
   return (
-    <article
-      className={cx(style, {
-        [redeemedStyle]: redeemed,
-        [baggedStyle]: bagged,
-      })}
-    >
+    <article className={cx(style)}>
       <Button
-        onClick={() => !disabled && setSelected(true)}
-        onFocus={() => !disabled && setSelected(true)}
+        onClick={(e) => {
+          !bagged && setSelected(true);
+        }}
+        onFocus={(e) => {
+          !bagged && setSelected(true);
+        }}
       >
         <header>
           <div>
@@ -88,7 +92,17 @@ const Card: React.FC<cardProps> = ({
             <FaCheck fill="rgb(69, 221, 69, 0.7)" />
           </div>
         </header>
-        <img src={product.img.url} />
+        {!loadedImg || loadedImg === "error" ? (
+          <section>
+            {!loadedImg ? (
+              <ClipLoader color={colors.primary} />
+            ) : (
+              <Typography variant="small">Image not Available</Typography>
+            )}
+          </section>
+        ) : (
+          <img src={loadedImg} />
+        )}
         <Separator />
         <Typography color="fontSecondary">{product.category}</Typography>
         <Typography>{product.name}</Typography>

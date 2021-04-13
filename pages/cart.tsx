@@ -166,7 +166,7 @@ const Cart: React.FC<cartProps> = ({ cart, user, appDispatch, isAuth }) => {
                   () => appDispatch({ type: "reedemSuccess", payload: total })
                 )
               }
-              disabled={total <= 0 || points - total < 0}
+              disabled={total <= 0 || points - total < 0 || loading}
             />
             {error && (
               <Typography bold variant="small" color="red">

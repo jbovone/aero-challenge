@@ -1,14 +1,15 @@
-import React, { InputHTMLAttributes, useState } from "react";
+import React, { Dispatch, InputHTMLAttributes } from "react";
 import * as yup from "yup";
 import { Input } from "./FancyInputs";
-import { Formik, ErrorMessage, useField } from "formik";
+import { Formik, useField } from "formik";
 import Typography from "./Typography";
-import { css, CSSObject } from "@emotion/css";
+import { css } from "@emotion/css";
 import { flex } from "../utils/flex";
 import MainButton from "./MainButton";
 import { IoMdCloseCircle } from "react-icons/io";
 import router from "next/router";
 import { colors } from "../constants/colors";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const style = css({
   ...flex("center", "center", "column"),
@@ -46,6 +47,12 @@ const inputCSS = (error: boolean) => ({
   border: error ? "solid 1px red" : "solid 1px lightgray",
 });
 
+const loaderStyle = css({
+  "&>span": {
+    transform: "translateX(10px)",
+  },
+});
+
 const FormHeader: React.FC = () => (
   <header>
     <MainButton onClick={() => router.push("/")}>
@@ -57,20 +64,26 @@ const FormHeader: React.FC = () => (
 const FormikWrapper: React.FC<{
   Schema?: object;
   initialValues: object;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => Promise<void>;
 }> = ({ children, Schema, initialValues, onSubmit }) => (
   <Formik
     initialValues={initialValues}
     validationSchema={Schema}
-    onSubmit={(data: any) => {
-      onSubmit(data);
-    }}
+    onSubmit={onSubmit}
   >
     {({ handleSubmit, isSubmitting }) => (
       <form className={style}>
         {children}
 
-        <MainButton title="Submit" onClick={(e: any) => handleSubmit(e)} />
+        <MainButton
+          disabled={isSubmitting}
+          title="Submit"
+          type="submit"
+          onClick={(e: any) => handleSubmit(e)}
+          className={loaderStyle}
+        >
+          {isSubmitting && <PuffLoader size="25px" color="white" />}
+        </MainButton>
       </form>
     )}
   </Formik>
@@ -101,21 +114,23 @@ const Field: React.FC<
   );
 };
 
-const SignUp: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
+interface formProps {
+  appDispatch: Dispatch<action>;
+}
+
+export const SignUp: React.FC<formProps> = ({ appDispatch }) => {
   const Schema = yup.object().shape({
-    email: yup.string().max(30).min(5),
+    username: yup.string().max(30).min(5),
     password: yup.string().max(30).min(8),
     repeatPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], "Passwords must match"),
   });
-
-  const [errorMsg, setErrorMsg] = useState<boolean>(false);
   return (
     <FormikWrapper
       Schema={Schema}
       initialValues={{ username: "", password: "", repeatPassword: "" }}
-      onSubmit={onSubmit}
+      onSubmit={() => Promise.resolve()}
     >
       <FormHeader />
       <Typography variant="h2" bold>
@@ -129,11 +144,26 @@ const SignUp: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
   );
 };
 
-const SignIn: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
+//async function onSubmit (data: any, appDispatch: Dispatch<action>)  {
+/* provided that this not a sample app: a real app endpoints here to: /api/auth with data as body */
+/* /me endpoint would still be important for example for setting the app initial state */
+
+//}}
+
+export const SignIn: React.FC<formProps> = ({ appDispatch }) => {
   return (
     <FormikWrapper
       initialValues={{ username: "John Kite", password: "John Kite" }}
-      onSubmit={onSubmit}
+      onSubmit={async (data) => {
+        const timmer = 4000;
+        await fetch("api/me")
+          .then((res) => res.json())
+          .then((user) => {
+            router.push("/");
+            appDispatch({ type: "setUser", payload: user });
+          });
+        return Promise.resolve();
+      }}
     >
       <FormHeader />
       <Typography variant="h2" bold>
@@ -145,31 +175,3 @@ const SignIn: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
     </FormikWrapper>
   );
 };
-
-const Form: React.FC<formHandlerProps> = ({ appDispatch, form }) => {
-  const Forms = {
-    "sign-up": {
-      component: SignUp,
-      onSubmit: (data: any) => {
-        appDispatch({ type: "setUser", payload: data });
-      },
-    },
-    "sign-in": {
-      onSubmit: (data: any) => {
-        appDispatch({
-          type: "setUser",
-          payload: {
-            name: "Jhon Kite",
-            points: 2400,
-            redeemHistory: [],
-          },
-        });
-      },
-      component: SignIn,
-    },
-  };
-
-  const Component = Forms[form]?.component;
-  return Component ? <Component onSubmit={Forms[form]?.onSubmit} /> : <></>;
-};
-export default Form;

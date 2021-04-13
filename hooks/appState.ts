@@ -122,7 +122,16 @@ function reducer(state: appState, action: action) {
         ...state,
         user: {
           ...state.user,
-          points: state.user.points - action.payload,
+          points: state.user.points + action.payload,
+        },
+        dialog: {
+          id: state?.dialog === null ? 1 : state.dialog.id + 1,
+          dialogType: dialogDispatch.coinsAdded,
+          title: action.payload,
+          timmer: 3000,
+          cb: () => {
+            router.push("/redeem");
+          },
         },
       };
     default:
