@@ -1,10 +1,10 @@
 import { CSSObject } from "@emotion/css";
 import styled from "@emotion/styled";
 import { GetStaticProps } from "next";
-import { Dispatch, useState, useEffect } from "react";
+import { Dispatch, useRef, useState, useEffect, forwardRef } from "react";
 import Card from "../components/Card";
 import View from "../components/normalizers/View";
-import { NextBtn, Paginator } from "../components/Paginator";
+import { Paginator } from "../components/Paginator";
 import PillButton from "../components/PillButton";
 import Separator from "../components/Separator";
 import Typography from "../components/Typography";
@@ -40,16 +40,21 @@ const ButtonPannel = styled.div({
   ...flex("flex-start"),
   minHeight: 120,
   marginTop: 40,
-  ...media(890, {
+  ...media(780, {
     flexDirection: "column",
     justifyContent: "space-between",
     height: 230,
     marginBottom: 40,
     ">*": {
-      width: "80%",
+      width: "60%",
     },
     h2: {
       alignSelf: "flex-start",
+    },
+  }),
+  ...media(500, {
+    ">*": {
+      width: "80%",
     },
   }),
 });
@@ -60,6 +65,7 @@ const ProductsViewer = styled.section({
   justifyContent: "center",
   minHeight: "50vh",
   gridTemplateColumns: "repeat(4, 23.5%)",
+  gridTemplateRows: "fit-content(100%)",
   ...media(1440, {
     gridTemplateColumns: "repeat(3, 30%)",
   }),
@@ -170,7 +176,7 @@ const Reedem: React.FC<redeem> = ({
           ))}
         </ProductsViewer>
         <Paginator
-          curentPage={page}
+          currentPage={page}
           {...{ itemsPerPage, setItemsPerPage, setPage }}
           totalPages={pagination.length}
         />

@@ -1,5 +1,10 @@
 import { css, CSSObject } from "@emotion/css";
-import React, { SetStateAction, SyntheticEvent } from "react";
+import React, {
+  SetStateAction,
+  SyntheticEvent,
+  useState,
+  useEffect,
+} from "react";
 import { flex } from "../utils/flex";
 import { media } from "../utils/media";
 import { Input, Select } from "./FancyInputs";
@@ -9,7 +14,7 @@ import Typography from "./Typography";
 
 interface PaginatorProps {
   totalPages: number;
-  curentPage: number;
+  currentPage: number;
   itemsPerPage: number;
   setPage: React.Dispatch<SetStateAction<number>>;
   setItemsPerPage: React.Dispatch<SetStateAction<number>>;
@@ -38,15 +43,24 @@ export const NextBtn: React.FC<nextBtnProps> = ({
 export const Paginator: React.FC<PaginatorProps> = ({
   setPage,
   totalPages,
-  curentPage,
+  currentPage,
   itemsPerPage,
   setItemsPerPage,
 }) => {
+  const [value, setValue] = useState("1");
+  useEffect(() => {
+    if (currentPage !== Number(value)) {
+      setValue(() => String(currentPage));
+    }
+  }, [currentPage]);
+
   function handlePageChange(value: string | "") {
+    setValue(() => (value.length > 1 ? value[value.length - 1] : value));
     if (isPageValid(value)) {
       setPage(() => parseInt(value));
     }
   }
+
   function isPageValid(page: string) {
     return Boolean(parseInt(page) >= 1 && parseInt(page) <= totalPages);
   }
@@ -57,7 +71,6 @@ export const Paginator: React.FC<PaginatorProps> = ({
   const style = css({
     ...flex("space-evenly", "center"),
     padding: 20,
-    margin: 10,
     "&>div": {
       ...flex(),
       margin: "20px 10px",
@@ -73,23 +86,23 @@ export const Paginator: React.FC<PaginatorProps> = ({
         <NextBtn
           setPage={setPage}
           right={false}
-          isLastPage={curentPage === totalPages}
-          isFirstPage={curentPage === 1}
+          isLastPage={currentPage === totalPages}
+          isFirstPage={currentPage === 1}
         />
         <Typography>Go to page</Typography>
         <Input
           onChange={({
             currentTarget: { value },
           }: SyntheticEvent<HTMLInputElement>) => handlePageChange(value)}
-          value={String(curentPage)}
+          value={value}
           cssProps={inputStyle}
         />
         <Typography>of {totalPages}</Typography>
         <NextBtn
           setPage={setPage}
           right={true}
-          isLastPage={curentPage === totalPages}
-          isFirstPage={curentPage === 1}
+          isLastPage={currentPage === totalPages}
+          isFirstPage={currentPage === 1}
         />
       </div>
       <div>

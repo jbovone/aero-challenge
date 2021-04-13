@@ -24,6 +24,7 @@ const style = css({
     svg: {
       width: 35,
       height: 35,
+      fill: "white",
     },
   },
   right: 0,

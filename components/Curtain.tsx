@@ -33,7 +33,10 @@ const Curtain = React.forwardRef<
     transition: ".3s",
     height: show ? "100%" : 0,
     background: colors.primaryAlpha,
-    padding: show ? 20 : 0,
+    padding: show ? 23 : 0,
+    "&>*": {
+      minWidth: 170,
+    },
     ...flex("space-between", "center", "column"),
     header: {
       ...boxStyle,
@@ -42,9 +45,9 @@ const Curtain = React.forwardRef<
     ul: {
       ...boxStyle,
       ...flex("flex-start", "center", "column"),
-      minWidth: 170,
       position: "relative",
       li: {
+        marginBottom: 7,
         "span small": {
           margin: 0,
         },
@@ -59,6 +62,9 @@ const Curtain = React.forwardRef<
         height: 15,
         width: 15,
       },
+    },
+    "button:hover, button:focus": {
+      transform: "scale(1) !important",
     },
   });
 

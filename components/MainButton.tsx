@@ -18,6 +18,7 @@ const MainButton: React.FC<
   variant = "filled",
   color = "fontPrimary",
   onClick,
+  className,
   children,
   ...props
 }) => {
@@ -40,7 +41,7 @@ const MainButton: React.FC<
     ...variants[variant],
   });
   return (
-    <Button className={cx(style, props.className)} onClick={onClick}>
+    <Button className={cx(style, className)} onClick={onClick} {...props}>
       <Typography
         variant="h4"
         color={variant === "filled" ? "fontInverse" : color}

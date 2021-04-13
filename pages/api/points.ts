@@ -29,7 +29,7 @@ export default async function handler(
     return res.status(400).end();
   }
 
-  apiService("/user/points", "POST", { amount: req.body.data })
+  apiService("/user/points", "POST", { amount: points })
     .then((apiRes) => {
       if (apiRes.isAxiosError) {
         return res.status(404).end();
