@@ -1,7 +1,7 @@
 import React, { useState, Dispatch, useEffect } from "react";
 import Typography from "./Typography";
 import { Input } from "./FancyInputs";
-import { css, CSSObject, cx, keyframes } from "@emotion/css";
+import { css, CSSObject, SerializedStyles, keyframes } from "@emotion/react";
 import { flex } from "../utils/flex";
 import PillButton from "./PillButton";
 import { colors } from "../constants/colors";
@@ -72,9 +72,11 @@ const sucessStyle = css({
   animation: `${bounce} .8s ease-in-out;`,
 });
 
-const loaderStyle: CSSObject = {
-  transform: "translate(-80px, -13px) scale(.7)",
-};
+const loadingStyle: SerializedStyles = css({
+  "section div": {
+    transform: "translate(-85px, -24px) scale(.7)",
+  },
+});
 
 const PromoCard: React.FC<PromoCardProps> = ({
   points,
@@ -97,9 +99,12 @@ const PromoCard: React.FC<PromoCardProps> = ({
   }, [success]);
   return (
     <article
-      className={cx(style, backgroundStyle, {
-        [sucessStyle]: success,
-      })}
+      css={[
+        style,
+        backgroundStyle,
+        success && sucessStyle,
+        loading && loadingStyle,
+      ]}
     >
       <header>
         <Typography variant="h2" color="fontSecondary" bold>
@@ -108,7 +113,9 @@ const PromoCard: React.FC<PromoCardProps> = ({
       </header>
       <section>
         {loading ? (
-          <PacmanLoader color={colors.decorator} css={loaderStyle as any} />
+          <div>
+            <PacmanLoader color={colors.decorator} />
+          </div>
         ) : (
           <>
             <Typography variant="p" color="fontSecondary" bold>

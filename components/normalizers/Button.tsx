@@ -1,4 +1,4 @@
-import { css, cx } from "@emotion/css";
+import { css } from "@emotion/react";
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 
 const style = css({
@@ -14,7 +14,7 @@ const Button = forwardRef<
   ButtonHTMLAttributes<HTMLButtonElement>
 >((props, ref) => {
   return (
-    <button ref={ref} {...props} className={cx(style, props.className)}>
+    <button css={style} ref={ref} {...props}>
       {props.children}
     </button>
   );

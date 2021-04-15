@@ -1,10 +1,10 @@
-import { css, CSSInterpolation } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 import Typography from "./Typography";
 import React from "react";
 import { colors } from "../constants/colors";
 import { media } from "../utils/media";
 
-const style: CSSInterpolation = css({
+const style: SerializedStyles = css({
   width: "100%",
   height: "45vw",
   maxHeight: "45vh",
@@ -25,7 +25,7 @@ const style: CSSInterpolation = css({
 
 const Header: React.FC<{}> = ({}) => {
   return (
-    <header className={style}>
+    <header css={style}>
       <Typography variant="h1" color="fontInverse">
         Electronics
       </Typography>

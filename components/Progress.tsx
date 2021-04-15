@@ -1,4 +1,4 @@
-import { css, CSSInterpolation } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 import { keyframes } from "@emotion/react";
 import React, { useEffect } from "react";
 import { colors } from "../constants/colors";
@@ -15,7 +15,7 @@ const prog = keyframes`
 `;
 
 const Progress: React.FC<ProgressProps> = ({ timmer, cb }) => {
-  const style: CSSInterpolation = css({
+  const style: SerializedStyles = css({
     background: colors.decorator,
     height: "10px",
     width: "0%",
@@ -35,6 +35,6 @@ const Progress: React.FC<ProgressProps> = ({ timmer, cb }) => {
     };
   }, []);
 
-  return <div className={style}></div>;
+  return <div css={style}></div>;
 };
 export default Progress;

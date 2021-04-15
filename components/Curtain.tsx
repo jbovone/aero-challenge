@@ -1,4 +1,4 @@
-import { css, CSSObject } from "@emotion/css";
+import { css, CSSObject } from "@emotion/react";
 import React, { Dispatch } from "react";
 import { FaChessBoard } from "react-icons/fa";
 import { colors } from "../constants/colors";
@@ -40,7 +40,9 @@ const Curtain = React.forwardRef<
     ...flex("space-between", "center", "column"),
     header: {
       ...boxStyle,
-      ...flex("center", "center", "row"),
+      "&>*": {
+        margin: "0 auto",
+      },
     },
     ul: {
       ...boxStyle,
@@ -90,7 +92,7 @@ const Curtain = React.forwardRef<
   };
 
   return (
-    <div className={style}>
+    <div css={style}>
       {show && (
         <>
           <header>

@@ -1,14 +1,14 @@
 import React, { Dispatch } from "react";
 import { FaTrash } from "react-icons/fa";
 import Button from "./normalizers/Button";
-import { css } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 import { flex } from "../utils/flex";
 import Typography from "./Typography";
 import { colors } from "../constants/colors";
 import Separator from "./Separator";
 import { media } from "../utils/media";
 
-const style = css({
+const style: SerializedStyles = css({
   ...flex("space-between", "stretch"),
   padding: 10,
   minHeight: 100,
@@ -61,7 +61,7 @@ interface mediaProps {
 const Media: React.FC<mediaProps> = ({ product, appDispatch }) => {
   return (
     <>
-      <article className={style}>
+      <article css={style}>
         <img src={product.img.url} alt="Price" />
         <div>
           <Typography>Name: {product.name}</Typography>

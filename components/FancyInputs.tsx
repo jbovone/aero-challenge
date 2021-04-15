@@ -1,9 +1,9 @@
-import { css, CSSInterpolation, CSSObject, cx } from "@emotion/css";
+import { css, SerializedStyles, CSSObject } from "@emotion/react";
 import React, { Dispatch, InputHTMLAttributes, SetStateAction } from "react";
 import { colors } from "../constants/colors";
 import Typography from "./Typography";
 
-const fancy: CSSInterpolation = css({
+const fancy: SerializedStyles = css({
   padding: 10,
   margin: 10,
   borderRadius: 5,
@@ -21,7 +21,7 @@ interface InputProps {
 export const Input: React.FC<
   InputProps & InputHTMLAttributes<HTMLInputElement>
 > = ({ onChange, value, cssProps, label, ...props }) => {
-  const extraStyle: CSSInterpolation = css({
+  const extraStyle: SerializedStyles = css({
     ...cssProps,
   });
   return (
@@ -35,7 +35,7 @@ export const Input: React.FC<
         {...props}
         onChange={onChange}
         value={value}
-        className={cx(fancy, extraStyle)}
+        css={[fancy, extraStyle]}
       />
     </>
   );
@@ -48,13 +48,13 @@ interface SelectProps {
 }
 
 export const Select: React.FC<SelectProps> = ({ setValue, values, value }) => {
-  const selectStyle: CSSInterpolation = css({
+  const selectStyle: SerializedStyles = css({
     maxWidth: 60,
   });
 
   return (
     <select
-      className={cx(fancy, selectStyle)}
+      css={[fancy, selectStyle]}
       onChange={(e) => setValue(Number(e.target.value))}
       value={value}
     >

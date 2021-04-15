@@ -131,7 +131,7 @@ export const SignUp: React.FC<formProps> = ({ appDispatch }) => {
     <FormikWrapper
       Schema={Schema}
       initialValues={{ username: "", password: "", repeatPassword: "" }}
-      onSubmit={() => Promise.resolve()}
+      onSubmit={() => Promise.resolve()} // we will need a real auth? im ready =D.
     >
       <FormHeader />
       <Typography variant="h2" bold>
@@ -145,18 +145,13 @@ export const SignUp: React.FC<formProps> = ({ appDispatch }) => {
   );
 };
 
-//async function onSubmit (data: any, appDispatch: Dispatch<action>)  {
-/* provided that this not a sample app: a real app endpoints here to: /api/auth with data as body */
-/* /me endpoint would still be important for example for setting the app initial state */
-
-//}}
-
 export const SignIn: React.FC<formProps> = ({ appDispatch }) => {
   return (
     <FormikWrapper
       initialValues={{ username: "John Kite", password: "John Kite" }}
+      /* provided that this not a sample app: a real app endpoints here to: /api/auth with data as body */
+      /* /me endpoint would still be important for example for setting the app initial state */
       onSubmit={async (data) => {
-        const timmer = 4000;
         await fetch("api/me")
           .then((res) => res.json())
           .then((user) => {

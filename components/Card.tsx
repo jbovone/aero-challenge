@@ -1,4 +1,4 @@
-import { css, CSSInterpolation, cx } from "@emotion/css";
+import { css } from "@emotion/react";
 import React, { useState, useRef, useEffect } from "react";
 import Typography from "./Typography";
 import Bag from "./svg/Bag";
@@ -16,7 +16,7 @@ const Card: React.FC<cardProps> = ({ product, points, setRedeem, bagged }) => {
   const [selected, setSelected] = useState(false);
   const [loadedImg, setLoadedImg] = useState<null | string>(null);
   const ref = useRef<HTMLButtonElement>(null);
-  const style: CSSInterpolation = css({
+  const style = css({
     width: "100%",
     height: "100%",
     "&>*": {
@@ -77,7 +77,7 @@ const Card: React.FC<cardProps> = ({ product, points, setRedeem, bagged }) => {
   }, []);
 
   return (
-    <article className={cx(style)}>
+    <article css={style}>
       <Button
         onClick={(e) => {
           !bagged && setSelected(true);

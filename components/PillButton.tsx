@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
-import { css } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 import { colors } from "../constants/colors";
 import Button from "./normalizers/Button";
 
@@ -12,7 +12,7 @@ const PillButton = forwardRef<
   HTMLButtonElement,
   PillButtonProps & ButtonHTMLAttributes<HTMLButtonElement>
 >(({ onClick, onBlur, title, disabled, active, ...props }, ref) => {
-  const style = css({
+  const style: SerializedStyles = css({
     border: `1px solid ${active ? colors.primary : colors.fontSecondary}`,
     color: active ? colors.fontInverse : colors.fontPrimary,
     background: active ? colors.primary : colors.fontInverse,
@@ -39,7 +39,7 @@ const PillButton = forwardRef<
       type="button"
       disabled={disabled}
       ref={ref}
-      className={style}
+      css={style}
       onBlur={onBlur}
       onClick={onClick}
       {...props}

@@ -1,6 +1,5 @@
 import React from "react";
-import { css, CSSObject } from "@emotion/css";
-import { flex } from "../../utils/flex";
+import { css, CSSObject } from "@emotion/react";
 
 interface viewProps {
   cssProps?: CSSObject;
@@ -12,6 +11,6 @@ const View: React.FC<viewProps> = ({ children, cssProps }) => {
     width: "100%",
     ...cssProps,
   });
-  return <main className={style}>{children}</main>;
+  return <main css={style}>{children}</main>;
 };
 export default View;

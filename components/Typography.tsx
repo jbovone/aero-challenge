@@ -1,4 +1,4 @@
-import { css, CSSObject } from "@emotion/css";
+import { css, CSSObject, SerializedStyles } from "@emotion/react";
 import React from "react";
 import { colors } from "../constants/colors";
 
@@ -47,7 +47,7 @@ const Typography: React.FC<TypographyProps> = ({
     },
   };
 
-  const style = css({
+  const style: SerializedStyles = css({
     fontFamily: "'Source Sans Pro', sans-serif",
     color: color ? colors[color] : colors.fontPrimary,
     textAlign: align ? align : "start",
@@ -56,12 +56,12 @@ const Typography: React.FC<TypographyProps> = ({
   });
 
   const Components = {
-    h1: <h1 className={style}>{children}</h1>,
-    h2: <h2 className={style}>{children}</h2>,
-    h3: <h3 className={style}>{children}</h3>,
-    h4: <h4 className={style}>{children}</h4>,
-    p: <p className={style}>{children}</p>,
-    small: <small className={style}>{children}</small>,
+    h1: <h1 css={style}>{children}</h1>,
+    h2: <h2 css={style}>{children}</h2>,
+    h3: <h3 css={style}>{children}</h3>,
+    h4: <h4 css={style}>{children}</h4>,
+    p: <p css={style}>{children}</p>,
+    small: <small css={style}>{children}</small>,
   };
 
   return Components[variant];

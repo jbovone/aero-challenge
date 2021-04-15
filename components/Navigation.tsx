@@ -1,4 +1,4 @@
-import { css } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 import React, { useState, Dispatch } from "react";
 import Link from "next/link";
 import Aerolab from "./svg/Aerolab";
@@ -26,7 +26,7 @@ interface NavigationProps {
   user: user;
 }
 
-const style = css({
+const style: SerializedStyles = css({
   padding: 10,
   height: "var(--header-height)",
   ...flex("space-between"),
@@ -108,7 +108,7 @@ const Navigation: React.FC<NavigationProps> = ({
   const { push, pathname } = useRouter();
 
   return (
-    <nav className={style}>
+    <nav css={style}>
       <a href="/">
         <Aerolab />
       </a>

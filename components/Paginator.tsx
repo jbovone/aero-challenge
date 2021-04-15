@@ -1,4 +1,4 @@
-import { css, CSSObject } from "@emotion/css";
+import { css, CSSObject, SerializedStyles } from "@emotion/react";
 import React, {
   SetStateAction,
   SyntheticEvent,
@@ -81,7 +81,7 @@ export const Paginator: React.FC<PaginatorProps> = ({
   });
 
   return (
-    <div className={style}>
+    <div css={style}>
       <div>
         <NextBtn
           setPage={setPage}

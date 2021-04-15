@@ -1,4 +1,4 @@
-import { css, cx } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 import React, { ButtonHTMLAttributes } from "react";
 import { colors } from "../constants/colors";
 import { flex } from "../utils/flex";
@@ -33,7 +33,7 @@ const MainButton: React.FC<
       },
     },
   };
-  const style = css({
+  const style: SerializedStyles = css({
     padding: "1.2em 2.2em",
     borderRadius: 6,
     cursor: "pointer",
@@ -41,7 +41,7 @@ const MainButton: React.FC<
     ...variants[variant],
   });
   return (
-    <Button className={cx(style, className)} onClick={onClick} {...props}>
+    <Button css={style} onClick={onClick} {...props}>
       <Typography
         variant="h4"
         color={variant === "filled" ? "fontInverse" : color}

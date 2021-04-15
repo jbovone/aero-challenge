@@ -1,6 +1,6 @@
 import React from "react";
 import { colors } from "../constants/colors";
-import { css } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 
 interface separatorProps {
   mb?: number;
@@ -10,7 +10,7 @@ interface separatorProps {
 }
 
 const Separator: React.FC<separatorProps> = ({ mb, mt, scale, width }) => {
-  const style = css({
+  const style: SerializedStyles = css({
     width: width ? width : "80%",
     height: scale ? scale : "1px",
     margin: "0 auto",
@@ -19,6 +19,6 @@ const Separator: React.FC<separatorProps> = ({ mb, mt, scale, width }) => {
     background: colors.fontSecondary,
   });
 
-  return <div className={style} />;
+  return <div css={style} />;
 };
 export default Separator;

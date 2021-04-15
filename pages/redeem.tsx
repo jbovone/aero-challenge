@@ -67,7 +67,7 @@ const ProductsViewer = styled.section({
   gridTemplateColumns: "repeat(4, 23.5%)",
   gridTemplateRows: "fit-content(100%)",
   ...media(1440, {
-    gridTemplateColumns: "repeat(3, 30%)",
+    gridTemplateColumns: "repeat(4, 20%)",
   }),
   ...media(810, {
     gridTemplateColumns: "repeat(2, 45%)",

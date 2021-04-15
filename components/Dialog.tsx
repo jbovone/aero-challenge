@@ -123,6 +123,7 @@ const Dialog: React.FC<DialogProps> = ({
       className={cx(style, {
         [closeStyle]: !open,
       })}
+      role="alert"
     >
       <Component title={title || ""}>
         <Progress

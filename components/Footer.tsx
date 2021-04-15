@@ -1,12 +1,12 @@
 import React from "react";
-import { css } from "@emotion/css";
+import { css, SerializedStyles } from "@emotion/react";
 import { flex } from "../utils/flex";
 import Typography from "./Typography";
 import { FaGithub, FaLinkedin, FaMailBulk } from "react-icons/fa";
 import AeroLogo from "../components/svg/Aerolab";
 import { colors } from "../constants/colors";
 
-const style = css({
+const style: SerializedStyles = css({
   ...flex("center", "center", "column"),
   background: "#343a40",
   padding: 30,
@@ -75,7 +75,7 @@ const style = css({
 
 const Footer: React.FC<{}> = () => {
   return (
-    <footer className={style}>
+    <footer css={style}>
       <section>
         <ul>
           <li>
