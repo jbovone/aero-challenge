@@ -13,6 +13,6 @@ describe("App", () => {
     await waitFor(() => fireEvent.click(screen.getByText("Submit")));
 
     expect(screen.getByText("Submit")).toHaveAttribute("disabled");
-    expect(screen.getByRole("alert")).toHaveTextContent("Wellcome");
+    expect(screen.getByRole("alert")).toHaveTextContent("Welcome");
   });
 });

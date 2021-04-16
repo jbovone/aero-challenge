@@ -7,7 +7,7 @@ const Box = styled.section(({ cssProps }: { cssProps?: CSSObject }) => ({
   maxWidth: 800,
   background: "white",
   ...flex("space-evenly", "center", "column"),
-  "box-shadow": boxShadow,
+  boxShadow: boxShadow,
   margin: "10px 15px",
   padding: "8em 1em",
   "h2, p": {

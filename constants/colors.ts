@@ -1,4 +1,4 @@
-export const colors = {
+export const colors: Record<colors, string> = {
   primary: "#15DBFF",
   primaryAlpha:
     "linear-gradient(-180deg, rgb(10,212,250,.7) 0%, rgb(37,187,241,.7) 100%);",
@@ -9,5 +9,5 @@ export const colors = {
   buttonInactive: "#ededed",
   boxShadow: "rgba(0,0,0,0.10)",
   decorator: "#FF8800",
-  red: "red",
+  danger: "red",
 };

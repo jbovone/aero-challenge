@@ -2,6 +2,7 @@ import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { colors } from "../constants/colors";
 import Button from "./normalizers/Button";
+import Typography from "./Typography";
 
 interface PillButtonProps {
   title: string;
@@ -14,12 +15,9 @@ const PillButton = forwardRef<
 >(({ onClick, onBlur, title, disabled, active, ...props }, ref) => {
   const style: SerializedStyles = css({
     border: `1px solid ${active ? colors.primary : colors.fontSecondary}`,
-    color: active ? colors.fontInverse : colors.fontPrimary,
     background: active ? colors.primary : colors.fontInverse,
-    fontWeight: "bold",
     borderRadius: 20,
     transition: ".5s",
-    letterSpacing: 1,
     padding: "1em 2em",
     margin: 8,
     textTransform: "uppercase",
@@ -34,6 +32,7 @@ const PillButton = forwardRef<
       border: `2px solid ${colors.primary}`,
     },
   });
+
   return (
     <Button
       type="button"
@@ -44,7 +43,13 @@ const PillButton = forwardRef<
       onClick={onClick}
       {...props}
     >
-      {title}
+      <Typography
+        bold
+        variant="small"
+        color={active ? "fontInverse" : "fontPrimary"}
+      >
+        {title}
+      </Typography>
     </Button>
   );
 });

@@ -1,6 +1,6 @@
 import { CSSObject } from "@emotion/css";
 import styled from "@emotion/styled";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useEffect } from "react";
 import Media from "../components/Media";
 import View from "../components/normalizers/View";
 import PillButton from "../components/PillButton";
@@ -14,17 +14,17 @@ import Error from "next/error";
 import useFetch from "../hooks/useFetch";
 import Box from "../components/Box";
 
-const MediaViewer = styled.section((props: { boxShadow?: string }) => ({
+const MediaViewer = styled.section({
   flex: 1,
-  "box-shadow": props.boxShadow,
+  boxShadow: boxShadow,
   margin: "10px 15px",
   padding: "1em",
   h2: {
     margin: 10,
   },
-}));
+});
 
-const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
+const TotalViewer = styled.section({
   ...flex("flex-start", "center", "column"),
   position: "sticky",
   alignSelf: "flex-start",
@@ -33,7 +33,7 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
   maxWidth: 500,
   minWidth: 400,
   border: `solid 1px ${colors.buttonInactive} `,
-  "box-shadow": props.boxShadow,
+  boxShadow: boxShadow,
   borderRadius: 7,
   margin: "1em",
   marginBottom: "20",
@@ -59,7 +59,7 @@ const TotalViewer = styled.section((props: { boxShadow?: string }) => ({
     minWidth: "unset",
     width: "90%",
   },
-}));
+});
 
 interface cartProps {
   cart: Product[];
@@ -117,7 +117,7 @@ const Cart: React.FC<cartProps> = ({ cart, user, appDispatch, isAuth }) => {
           </Typography>
         </Box>
       ) : (
-        <MediaViewer boxShadow={boxShadow}>
+        <MediaViewer>
           <Typography variant="h2" bold>
             Your Prizes:
           </Typography>
@@ -132,7 +132,7 @@ const Cart: React.FC<cartProps> = ({ cart, user, appDispatch, isAuth }) => {
       )}
 
       {cart.length > 0 && (
-        <TotalViewer boxShadow={boxShadow}>
+        <TotalViewer>
           <Typography bold variant="h2">
             Summary:
           </Typography>
@@ -169,7 +169,7 @@ const Cart: React.FC<cartProps> = ({ cart, user, appDispatch, isAuth }) => {
               disabled={total <= 0 || points - total < 0 || loading}
             />
             {error && (
-              <Typography bold variant="small" color="red">
+              <Typography bold variant="small" color="danger">
                 Service Unavailable at the moment.
               </Typography>
             )}

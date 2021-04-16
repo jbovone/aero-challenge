@@ -6,7 +6,7 @@ type align = "start" | "left" | "right" | "center";
 
 interface TypographyProps {
   variant?: "h1" | "h2" | "h3" | "h4" | "p" | "small";
-  color?: keyof typeof colors;
+  color?: colors;
   bold?: boolean;
   align?: align;
   cssProps?: CSSObject;

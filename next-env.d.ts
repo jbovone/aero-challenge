@@ -66,3 +66,15 @@ interface formHandlerProps {
 }
 
 type orderBy = "Most Recent" | "Lowest Price" | "Highest Price";
+type colors =
+  | "primary"
+  | "primaryAlpha"
+  | "gradientPrimary"
+  | "fontPrimary"
+  | "fontSecondary"
+  | "fontInverse"
+  | "buttonInactive"
+  | "fontInverse"
+  | "boxShadow"
+  | "decorator"
+  | "danger";

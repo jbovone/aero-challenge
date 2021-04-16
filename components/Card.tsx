@@ -25,6 +25,7 @@ const Card: React.FC<cardProps> = ({ product, points, setRedeem, bagged }) => {
     button: {
       margin: "0",
     },
+    maxHeight: 350,
     boxShadow: boxShadow,
     paddingBottom: 8,
     position: "relative",
@@ -32,20 +33,20 @@ const Card: React.FC<cardProps> = ({ product, points, setRedeem, bagged }) => {
     transform: selected ? "scale(1.2)" : "none",
     zIndex: selected ? 100 : 99,
     section: {
-      height: 160,
+      height: 205,
       ...flex(),
     },
     header: {
       ...flex("space-between", "center", "row-reverse"),
       div: {
-        "svg:nth-child(1)": {
+        "svg:nth-of-type(1)": {
           marginTop: 9,
           transition: ".8s",
           transform: bagged
             ? " translate(-15px, 20px) scale(1.9)"
             : "scale(1.1)",
         },
-        "svg:nth-child(2)": {
+        "svg:nth-of-type(2)": {
           transition: ".8s",
           transform: `translate(-38px, 10px) ${
             bagged ? "scale(2.8)" : " scale(0.1)"
@@ -101,7 +102,9 @@ const Card: React.FC<cardProps> = ({ product, points, setRedeem, bagged }) => {
             )}
           </section>
         ) : (
-          <img src={loadedImg} />
+          <section>
+            <img src={loadedImg} />
+          </section>
         )}
         <Separator />
         <Typography color="fontSecondary">{product.category}</Typography>

@@ -1,7 +1,7 @@
 import { CSSObject } from "@emotion/css";
 import styled from "@emotion/styled";
 import { GetStaticProps } from "next";
-import { Dispatch, useRef, useState, useEffect, forwardRef } from "react";
+import { Dispatch, useState } from "react";
 import Card from "../components/Card";
 import View from "../components/normalizers/View";
 import { Paginator } from "../components/Paginator";
@@ -61,19 +61,22 @@ const ButtonPannel = styled.div({
 
 const ProductsViewer = styled.section({
   display: "grid",
-  gap: "2em",
+  gap: "30px",
   justifyContent: "center",
   minHeight: "50vh",
-  gridTemplateColumns: "repeat(4, 23.5%)",
+  gridTemplateColumns: "repeat(5, 17.5%)",
   gridTemplateRows: "fit-content(100%)",
-  ...media(1440, {
-    gridTemplateColumns: "repeat(4, 20%)",
+  ...media(1740, {
+    gridTemplateColumns: "repeat(4, 22%)",
   }),
-  ...media(810, {
+  ...media(1440, {
+    gridTemplateColumns: "repeat(3, 28%)",
+  }),
+  ...media(850, {
     gridTemplateColumns: "repeat(2, 45%)",
   }),
-  ...media(520, {
-    gridTemplateColumns: "repeat(1, minMax(270px, 68%))",
+  ...media(620, {
+    gridTemplateColumns: "repeat(1, minMax(270px, 290px))",
   }),
 });
 
@@ -103,7 +106,7 @@ const Reedem: React.FC<redeem> = ({
   appDispatch,
   isAuth,
 }) => {
-  const [itemsPerPage, setItemsPerPage] = useState<number>(8);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const { activeOrder, assorted, setOrderBy, orderTypes } = useSorted(products);
   const pagination = usePagination(itemsPerPage, assorted);
@@ -121,7 +124,10 @@ const Reedem: React.FC<redeem> = ({
             alignSelf: "flex-end",
           }}
         >
-          {pagination[page - 1].length * page} of {products.length} products
+          {products.length < itemsPerPage * page
+            ? products.length
+            : itemsPerPage * page}{" "}
+          of {products.length} products
         </Typography>
         <Separator width="100%" mt={20} mb={40} />
       </ProductCounterContainer>

@@ -4,9 +4,7 @@ import Typography from "../components/Typography";
 import PromoCard from "../components/PromoCard";
 import { flex } from "../utils/flex";
 import { CSSObject } from "@emotion/css";
-import { media } from "../utils/media";
 import Box from "../components/Box";
-import Button from "../components/normalizers/Button";
 import Error from "next/error";
 
 interface coinsProps {
@@ -68,10 +66,10 @@ const Coins: React.FC<coinsProps> = ({ user, appDispatch, isAuth }) => {
       </Typography>
       <Box cssProps={redeemHistoryCSSprops} id="redeem-history">
         {user.redeemHistory.length ? (
-          user.redeemHistory.map((item) => (
-            <Button>
+          user.redeemHistory.map((item, i) => (
+            <article key={item.name + i}>
               <img src={item.img.url} />
-            </Button>
+            </article>
           ))
         ) : (
           <>

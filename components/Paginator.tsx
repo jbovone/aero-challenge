@@ -108,7 +108,7 @@ export const Paginator: React.FC<PaginatorProps> = ({
       <div>
         <Typography>Showing</Typography>
         <Select
-          values={[4, 8, 12, 16]}
+          values={[4, 5, 8, 10, 12, 16]}
           setValue={(itemsPerPage) => {
             setItemsPerPage(itemsPerPage);
             setPage(() => 1);

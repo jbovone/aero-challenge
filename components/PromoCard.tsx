@@ -145,7 +145,7 @@ const PromoCard: React.FC<PromoCardProps> = ({
         {error && (
           <Typography
             variant="small"
-            color="red"
+            color="danger"
             cssProps={{ position: "absolute", bottom: -25 }}
           >
             {typeof error === "string"

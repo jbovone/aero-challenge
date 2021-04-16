@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { Input } from "./FancyInputs";
 import { Formik, useField } from "formik";
 import Typography from "./Typography";
-import { css } from "@emotion/css";
+import { css, CSSObject, SerializedStyles } from "@emotion/react";
 import { flex } from "../utils/flex";
 import MainButton from "./MainButton";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -11,7 +11,7 @@ import router from "next/router";
 import { colors } from "../constants/colors";
 import PuffLoader from "react-spinners/PuffLoader";
 
-const style = css({
+const style: SerializedStyles = css({
   ...flex("center", "center", "column"),
   position: "fixed",
   header: {
@@ -38,20 +38,20 @@ const style = css({
   background: "rgb(255,255,255,0.9)",
   borderLeft: "solid 1px lightgray",
   label: {
+    marginTop: 20,
     alignSelf: "flex-start",
   },
-});
-
-const inputCSS = (error: boolean) => ({
-  width: "90%",
-  marginBottom: 30,
-  border: error ? "solid 1px red" : "solid 1px lightgray",
-});
-
-const loaderStyle = css({
-  "&>span": {
-    transform: "translateX(10px)",
+  button: {
+    marginTop: 20,
+    span: {
+      transform: "translateX(10px)",
+    },
   },
+});
+
+const inputCSS = (error: boolean): CSSObject => ({
+  width: "90%",
+  border: error ? "solid 1px red" : "solid 1px lightgray",
 });
 
 const FormHeader: React.FC = () => (
@@ -73,7 +73,7 @@ const FormikWrapper: React.FC<{
     onSubmit={onSubmit}
   >
     {({ handleSubmit, isSubmitting }) => (
-      <form className={style}>
+      <form css={style}>
         {children}
 
         <MainButton
@@ -81,7 +81,6 @@ const FormikWrapper: React.FC<{
           title="Submit"
           type="submit"
           onClick={(e: any) => handleSubmit(e)}
-          className={loaderStyle}
         >
           {isSubmitting && <PuffLoader size="25px" color="white" />}
         </MainButton>
@@ -108,7 +107,7 @@ const Field: React.FC<
         type={props.type}
         cssProps={inputCSS(Boolean(error))}
       />
-      <Typography color="red" variant="small">
+      <Typography color="danger" variant="small">
         {Boolean(error) && touched && error}
       </Typography>
     </>

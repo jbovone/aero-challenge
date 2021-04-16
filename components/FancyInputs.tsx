@@ -4,7 +4,7 @@ import { colors } from "../constants/colors";
 import Typography from "./Typography";
 
 const fancy: SerializedStyles = css({
-  padding: 10,
+  padding: 13,
   margin: 10,
   borderRadius: 5,
   border: `1px solid ${colors.fontSecondary}`,

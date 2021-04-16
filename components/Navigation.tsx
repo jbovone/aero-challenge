@@ -30,7 +30,7 @@ const style: SerializedStyles = css({
   padding: 10,
   height: "var(--header-height)",
   ...flex("space-between"),
-
+  position: "relative",
   aside: {
     ...flex(),
     "&>*": {
@@ -79,12 +79,6 @@ const style: SerializedStyles = css({
   },
 });
 
-const pulsate = keyframes`
-  50% {
-    transform: scale(1.1)
-  }
-`;
-
 const Badge = styled.article({
   background: "red",
   borderRadius: "50%",
@@ -94,7 +88,6 @@ const Badge = styled.article({
   right: 0,
   height: 25,
   width: 25,
-  animation: `${pulsate} 3.5s ease infinite`,
 });
 
 const Navigation: React.FC<NavigationProps> = ({
@@ -113,59 +106,61 @@ const Navigation: React.FC<NavigationProps> = ({
         <Aerolab />
       </a>
       {isAuth ? (
-        <aside>
-          <Link href="/redeem">
-            <div className="aside-item">
-              <Gift />
+        <>
+          <aside>
+            <Link href="/redeem">
+              <div className="aside-item">
+                <Gift />
+                <Typography bold variant="small">
+                  Prizes
+                </Typography>
+              </div>
+            </Link>
+            <Link href="/coins">
+              <div className="aside-item coins">
+                <Coin />
+                <Typography bold variant="p" align="center">
+                  {coins}
+                </Typography>
+                <Typography bold variant="small">
+                  Your Coins
+                </Typography>
+              </div>
+            </Link>
+            <Link href="/cart">
+              <div className="aside-item">
+                {Boolean(bagLength) && (
+                  <Badge>
+                    <Typography bold variant="p" color="fontInverse">
+                      {bagLength}
+                    </Typography>
+                  </Badge>
+                )}
+                <Bag />
+                <Typography bold variant="small">
+                  Your Cart
+                </Typography>
+              </div>
+            </Link>
+            <Button
+              className="aside-item"
+              onClick={() => setShowUserMenu((show) => !show)}
+            >
+              <FaUser />
               <Typography bold variant="small">
-                Prizes
+                {user.name}
               </Typography>
-            </div>
-          </Link>
-          <Link href="/coins">
-            <div className="aside-item coins">
-              <Coin />
-              <Typography bold variant="p" align="center">
-                {coins}
-              </Typography>
-              <Typography bold variant="small">
-                Your Coins
-              </Typography>
-            </div>
-          </Link>
-          <Link href="/cart">
-            <div className="aside-item">
-              {Boolean(bagLength) && (
-                <Badge>
-                  <Typography bold variant="p" color="fontInverse">
-                    {bagLength}
-                  </Typography>
-                </Badge>
-              )}
-              <Bag />
-              <Typography bold variant="small">
-                Your Cart
-              </Typography>
-            </div>
-          </Link>
-          <Button
-            className="aside-item"
-            onClick={() => setShowUserMenu((show) => !show)}
-          >
-            <FaUser />
-            <Typography bold variant="small">
-              {user.name}
-            </Typography>
-            {showUserMenu && (
-              <DropdownMenu
-                show={showUserMenu}
-                setShow={setShowUserMenu}
-                appDispatch={appDispatch}
-                user={user}
-              />
-            )}
-          </Button>
-        </aside>
+            </Button>
+          </aside>
+          {showUserMenu && (
+            <DropdownMenu
+              show={showUserMenu}
+              setShow={setShowUserMenu}
+              appDispatch={appDispatch}
+              user={user}
+            />
+          )}
+        </>
       ) : pathname === "/" ? (
         <MainButton title="Sign In" onClick={() => push("?form=sign-in")} />
       ) : (
